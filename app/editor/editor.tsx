@@ -2,28 +2,31 @@
 
 import { useSession, CombinedDataProvider, Text } from "@inrupt/solid-ui-react";
 import { useRouter } from "next/navigation";
-import Login from "../auth/login";
+import useGetDatabase from "../hooks/useGetDatabase";
+import { useContext } from "react";
+import { SolidContext } from "../context-providers";
 
 export default function (){
     const { session, sessionRequestInProgress } = useSession()
     const router = useRouter()
+    const {selectedPodUrl} = useContext(SolidContext)
 
     if (!session.info.isLoggedIn) {
         router.push('/auth')
-        return (<>Go login</>)
+        return (<>Redirecting to Login...</>)
     }
 
-    if (sessionRequestInProgress) return (<>"Loading..."</>)
-
-    const webId = session.info.webId
-    console.log(webId)
+    if (!selectedPodUrl) {return <>No pod selected</>}
+    const {loading, entries} = useGetDatabase({podUrl: selectedPodUrl})
+    
+    if (sessionRequestInProgress || loading) return (<>"Loading..."</>)
 
     return (<>
-        Success! Editor: 
-        {/*
+        Success! Editor
+        {/* 
         <CombinedDataProvider datasetUrl={webId} thingUrl={webId}>
             <Text propertyUrl="http://www.w3.org/2006/vcard/ns#fn" edit autosave/>
         </CombinedDataProvider>
-    */}
+        */}
     </>)
 }
