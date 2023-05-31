@@ -2,12 +2,12 @@ import { createSolidDataset, getSolidDataset, getThingAll, saveSolidDatasetAt } 
 import { useSession } from "@inrupt/solid-ui-react";
 import { useEffect, useState } from "react";
 
-export default function useGetDatabase({podUrl}: {podUrl: string}){
+export default function useGetEntriesDatabase({podUrl}: {podUrl: string}){
     const {session} = useSession()
 
     const entriesUrl = `${podUrl}journalEntries`
 
-    const [entries, setEntries]: any = useState()
+    const [entriesDB, setEntriesDB] = useState(createSolidDataset())
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState("");
 
@@ -17,10 +17,7 @@ export default function useGetDatabase({podUrl}: {podUrl: string}){
         
             console.log("Got database:", database)
             setLoading(false)
-            if (database){
-                const entries = getThingAll(database)
-                setEntries(entries)
-            }
+            setEntriesDB(database)
         } catch(error: any) { 
             console.log("error", error)
             if (typeof error.statusCode === "number" && error.statusCode === 404) {
@@ -30,12 +27,12 @@ export default function useGetDatabase({podUrl}: {podUrl: string}){
                     createSolidDataset(),
                     { fetch: session.fetch }
                 );
-                return useGetDatabase({podUrl})
+                return useGetEntriesDatabase({podUrl})
             } else {
                 console.error(error.message);
                 setError(error.message)
             }
         }})()
     }, [])
-    return {entries, loading, error}
+    return {entriesDB, loading, error}
 }
