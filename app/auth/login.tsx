@@ -4,8 +4,8 @@ import { LoginButton, LogoutButton, useSession } from "@inrupt/solid-ui-react";
 import { useEffect, useState } from "react";
 
 export default function (){
-    const [oidcIssuer, setOidcIssuer] = useState("http://localhost:3000")
-    //const [oidcIssuer, setOidcIssuer] = useState("https://inrupt.net")
+    //const [oidcIssuer, setOidcIssuer] = useState("http://localhost:3000")
+    const [oidcIssuer, setOidcIssuer] = useState("https://inrupt.net")
     const [currentUrl, setCurrentUrl] = useState("")
 
     useEffect(() => {
@@ -30,6 +30,7 @@ export default function (){
         <LoginButton 
             oidcIssuer={oidcIssuer}
             redirectUrl={currentUrl}
+            authOptions={{clientName: "notepod-gpt"}}
         />
     </>)
 }
