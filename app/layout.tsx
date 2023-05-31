@@ -1,6 +1,6 @@
 import './globals.css'
 import { Inter } from 'next/font/google'
-import SessionProvider from './session-provider'
+import {SessionProvider, SolidContextProvider} from './context-providers'
 import Nav from './nav'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -18,12 +18,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <SessionProvider>
-        <body>
-          <Nav />
-          <div className='mt-10'>
-            {children}
-          </div>
-        </body>
+        <SolidContextProvider>
+          <body>
+            <Nav />
+            <div className='mt-10'>
+              {children}
+            </div>
+          </body>
+        </SolidContextProvider>
       </SessionProvider>
     </html>
   )
