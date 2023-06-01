@@ -25,28 +25,28 @@ export default function (){
     }}, [entry])
     console.log(entriesDB, entry, entryText)
 
-    if (!session.info.isLoggedIn) {
+
+    /*if (!session.info.isLoggedIn) {
         router.push('/auth')
         return (<>Redirecting to Login...</>)
     }
     if (sessionRequestInProgress) return (<>"Loading Session..."</>)
 
     if (error) {return <>Loading Database Error: {error}</>}
-    if (loading) return (<>"Loading EntriesDB..."</>)
-
+    if (loading) return (<>"Loading EntriesDB..."</>)*/
 
     return (<>
-        Success! Editor 
-        <br />
         <textarea 
+            className="w-full h-40 p-2 border border-gray-300 rounded"
             value={entryText ? entryText : ""}
             onChange={(e) => {
                 setEntryText(e.target.value)
                 debSaveEntry(e.target.value, saveEntry)
             }}
         />
-        <label>status: </label>
-        <p>{savingEntry ? "saving" : "saved"}</p>
+        <div className="text-gray-600 mb-2">
+            {savingEntry ? "saving..." : "saved"}
+        </div>
         <p>{postError && postError}</p>
     </>)
 }

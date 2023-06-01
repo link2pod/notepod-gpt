@@ -1,11 +1,11 @@
 import EntryDisplay from "./entry-display";
-import Podselector from "./podselector";
+import PodBrowser from "./pod-browser";
 
 
 export default function (){
 
     return (<>
-        <Podselector />
+        <PodBrowser />
         <br />
         <EntryDisplay/>
     </>)

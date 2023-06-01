@@ -1,11 +1,13 @@
 "use client"
 
+import { useSession } from "@inrupt/solid-ui-react";
 import Link from "next/link";
 import { useState } from "react";
 
 export default function (){
 
     const [hidden, setHidden] = useState(true)
+    const {session} = useSession()
 
     return ( 
     <div className="bg-gray-800">
@@ -22,10 +24,15 @@ export default function (){
                 </div>
                 </div>
             </div>
-            <div className="hidden sm:block">
-                <Link href="/auth" className="text-gray-300 hover:text-white px-3 py-2 rounded-md">Login</Link>
-                <Link href="/auth" className="text-gray-300 hover:text-white px-3 py-2 rounded-md">Sign up</Link>
-            </div>
+            { session.info.isLoggedIn ? 
+                <div className="hidden sm:block text-gray-300 hover:text-white px-3 py-2 rounded-md">
+                    Logout
+                </div> : 
+                <div className="hidden sm:block">
+                    <Link href="/auth" className="text-gray-300 hover:text-white px-3 py-2 rounded-md">Login</Link>
+                    <Link href="/auth" className="text-gray-300 hover:text-white px-3 py-2 rounded-md">Sign up</Link>
+                </div>
+            }
             <div className="-mr-2 flex sm:hidden">
                 <button onClick={() => setHidden(!hidden)} type="button" className="text-gray-300 hover:text-white focus:outline-none focus:text-white">
                 <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
@@ -37,7 +44,7 @@ export default function (){
         </div>
 
         {/*<!-- Mobile menu, show/hide based on menu state. -->*/}
-        <div className={hidden ? "hidden" : ""} id="mobile-menu">
+        <div className={`sm:hidden ${hidden ? "hidden" : ""}`} id="mobile-menu">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             <Link href="/" className="text-gray-300 hover:text-white block px-3 py-2 rounded-md">Home</Link>
             <Link href="#" className="text-gray-300 hover:text-white block px-3 py-2 rounded-md">About</Link>

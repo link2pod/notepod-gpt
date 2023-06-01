@@ -21,7 +21,7 @@ export default function RootLayout({
         <SolidContextProvider>
           <body>
             <Nav />
-            <div className='mt-10'>
+            <div className='pt-10 max-w-7xl sm:p-10'>
               {children}
             </div>
           </body>
