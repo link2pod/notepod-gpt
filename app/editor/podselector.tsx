@@ -3,7 +3,7 @@
 import { useSession } from "@inrupt/solid-ui-react"
 import { useContext, useState } from "react";
 import PodDisplay from "./pod-display";
-import useGetPods from "../hooks/useGetPods";
+import useGetPods from "../lib/useGetPods";
 import { SolidContext } from "../context-providers";
 
 export default function (){
@@ -20,15 +20,15 @@ export default function (){
         <button onClick={(_) => setSelectedPodUrl(pods[selectedPodId])}>Use Selected Pod</button>
         <br />
         <div className="grid grid-flow-col justify-evenly">
-        { pods.map((pod, index) => {return <div
-            id={`pod-${index}`}
-            onClick={(_) => setSelectedPodId(index)}
-        >
-            <PodDisplay 
-            id={index+1} 
-            selected={index === selectedPodId}
-            pod={pod}
-        /></div>}) }
+            { pods.map((pod, index) => {return <div
+                key={`pod-${index}`}
+                onClick={(_) => {console.log("Selected Pod"); setSelectedPodId(index)}}
+            >
+                <PodDisplay 
+                id={index+1} 
+                selected={index === selectedPodId}
+                pod={pod} />
+            </div>}) }
         </div>
     </>)
 }

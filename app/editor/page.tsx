@@ -1,4 +1,4 @@
-import Editor from "./editor";
+import EntryDisplay from "./entry-display";
 import Podselector from "./podselector";
 
 
@@ -7,6 +7,6 @@ export default function (){
     return (<>
         <Podselector />
         <br />
-        <Editor />
+        <EntryDisplay/>
     </>)
 }
