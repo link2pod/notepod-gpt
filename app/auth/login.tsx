@@ -12,7 +12,8 @@ export default function (){
         setCurrentUrl(window.location.href)
     }, [setCurrentUrl])
 
-    const {session} = useSession()
+    const {session, sessionRequestInProgress} = useSession()
+    if (sessionRequestInProgress) return <>Logging in...</>
 
     if (session.info.isLoggedIn) {
         return (<>
