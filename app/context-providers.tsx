@@ -1,12 +1,12 @@
 'use client'
 
-import * as SUR from "@inrupt/solid-ui-react";
+import {SessionProvider as SP} from "@inrupt/solid-ui-react";
 import { ReactNode } from "react";
 
 export function SessionProvider({ children } : {children: ReactNode}) {
   return (
-    <SUR.SessionProvider sessionId="app-session">
+    <SP sessionId="app-session">
       {children}
-    </SUR.SessionProvider>
+    </SP>
   );
 };
