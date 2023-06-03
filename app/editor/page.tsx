@@ -14,18 +14,19 @@ import { SolidDataset } from "@inrupt/solid-client";
 export default function Page(){
     const {session, sessionRequestInProgress} = useSession()
     const {pods, loading: podsLoading, error: podsError} = useGetPods()
-    const [selectedPodId, setSelectedPodId] = useState(0)
+    const [selectedPodUrl, setSelectedPodUrl] = useState("")
     const [entriesDB, setEntriesDB] = useState(undefined as undefined | SolidDataset) 
     //const {loading: savingEntry, saveEntry, error: postError } = usePostEntry()
     const router = useRouter()
     
     useEffect(() => { (async () => {
-            console.log(pods)
-        if (pods.length > 0){
-            const entriesDB = await getEntriesDatabase(pods[selectedPodId])
+        try{
+            const entriesDB = await getEntriesDatabase(selectedPodUrl)
             setEntriesDB(entriesDB)
+        } catch (err){
+            console.log(err)
         }
-    })() }, [selectedPodId, pods])
+    })() }, [selectedPodUrl, pods])
     console.log(podsLoading, pods)
 
     if (sessionRequestInProgress) return (<>Logging in <Spinner /> </>)
@@ -38,8 +39,13 @@ export default function Page(){
     console.log(entriesDB)
 
     return (<>
-        <PodBrowser pods={pods} selectedPodId={selectedPodId} setSelectedPodId={setSelectedPodId}/>
+        <label>Pod Url: </label>
+        <input type="url" value={selectedPodUrl} onChange={(e) => {
+            setSelectedPodUrl(e.target.value)
+        }}/>
+        <p>Or select a pod: </p>
+        <PodBrowser pods={pods} selectedPodUrl={selectedPodUrl} setSelectedPodUrl={setSelectedPodUrl}/>
         <br />
-        <EntryDisplay entriesDB={entriesDB} setEntriesDB={setEntriesDB} podUrl={pods[selectedPodId]} />
+        <EntryDisplay entriesDB={entriesDB} setEntriesDB={setEntriesDB} podUrl={selectedPodUrl} />
     </>)
 }
