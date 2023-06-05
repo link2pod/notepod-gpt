@@ -1,19 +1,21 @@
-import { createSolidDataset, getSolidDataset, getThingAll, saveSolidDatasetAt } from "@inrupt/solid-client";
+import { createSolidDataset, getSolidDataset, saveSolidDatasetAt } from "@inrupt/solid-client";
 import { getDefaultSession } from "@inrupt/solid-client-authn-browser";
 
+// Hard-coded function for demo. In production, probably fetch from user-defined locations 
 export function getDatabaseIRI(podUrl: string) {
     return `${podUrl}journalEntries.ttl`
 }
 
 export default async function getEntriesDatabase(podUrl: string){
+    // Retrieve auth-session data
     const session = getDefaultSession()
+
     if (!session.info.isLoggedIn) {
         throw new Error("not logged in")
     }
     const entriesUrl = getDatabaseIRI(podUrl)
     var resultDataset = createSolidDataset()
     
-    console.log(entriesUrl, session)
     try {
         resultDataset = await getSolidDataset(entriesUrl, { fetch: session.fetch })
     } catch(error: any) { 
@@ -26,6 +28,7 @@ export default async function getEntriesDatabase(podUrl: string){
             );
         } else {
             console.error(error.message);
+            throw error
         }
     }
     return resultDataset
