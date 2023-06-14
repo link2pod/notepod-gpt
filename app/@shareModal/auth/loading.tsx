@@ -1,4 +1,4 @@
-import Spinner from "@/app/components/spinner";
+import Spinner from "@/app/lib/components/spinner";
 
 export default function (){
     return (<Spinner />)
