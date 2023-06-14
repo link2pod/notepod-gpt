@@ -9,6 +9,9 @@ import Spinner from "./components/spinner";
 import { useRouter } from "next/navigation";
 import getEntriesDatabase from "./lib/getEntriesDatabase";
 import { SolidDataset } from "@inrupt/solid-client";
+import NoteDropdown from "./components/note-dropdown";
+import EntryEditor from "./components/entry-editor";
+import Editor from "./components/editor";
 
 
 export default function Page(){
@@ -38,26 +41,38 @@ export default function Page(){
     if (podsError) return <>Error: {podsError}</>
     console.log(entriesDB)
 */
+    return (<SlideableSeparator 
+        leftSection={<NoteDropdown />}
+        rightSection={<Editor />}
+    />)
+}
+
+const SlideableSeparator = (props: {
+    leftSection: React.ReactNode,
+    rightSection: React.ReactNode,
+}) => {
+    const [separatorPosition, setSeparatorPosition] = useState(50);
+  
+    const handleSeparatorDrag = (e) => {
+      const containerWidth = e.target.parentNode.offsetWidth;
+      const separatorPosition = Math.max(0, Math.min(e.clientX / containerWidth * 100, 100));
+      setSeparatorPosition(separatorPosition);
+    };
+  
     return (
-    <div className="flex h-screen">
-      <div className="w-1/2 h-full bg-gray-200">
-        {
-        //<PodBrowser pods={pods} selectedPodId={selectedPodId} setSelectedPodId={setSelectedPodId}/>
-}
+      <div className="flex h-full">
+        <div className="w-1/2 h-full bg-gray-200">
+          {props.leftSection}
+        </div>
+        <div className="relative w-1/2 h-full bg-gray-200">
+          {props.rightSection}
+          <div
+            className="absolute top-0 bottom-0 left-0 right-0 bg-gray-300 cursor-col-resize"
+            style={{ left: `${separatorPosition}%` }}
+            draggable="true"
+            onDrag={handleSeparatorDrag}
+          />
+        </div>
       </div>
-      <div className="relative w-1/2 h-full bg-gray-200">
-        {
-        //<EntryDisplay entriesDB={entriesDB} setEntriesDB={setEntriesDB} podUrl={pods[selectedPodId]} />
-        }
-        <div
-          className="absolute top-0 bottom-0 left-0 right-0 bg-gray-300 cursor-col-resize"
-          draggable="true"
-        />
-          {
-            //onDrag={handleSeparatorDrag}
-            //style={{ left: `${separatorPosition}%` }}
-          }
-      </div>
-    </div>
-    )
-}
+    );
+  };

@@ -18,9 +18,9 @@ export default function RootLayout(props: {
     <html lang="en">
       <SessionProvider>
         <SolidContextProvider>
-          <body>
+          <body className='flex flex-col h-screen'>
             <Nav />
-            <div className='pt-10 max-w-7xl sm:p-10'>
+            <div className='h-full'>
               {props.children}
               {props.authModal}
             </div>
