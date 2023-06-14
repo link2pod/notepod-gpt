@@ -10,17 +10,14 @@ export default function (){
     const {session} = useSession()
 
     return ( 
-    <div className="bg-gray-800">
+    <div className="bg-neutral">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
                 <Link href="#">Logo</Link>
                 <div className="hidden sm:block">
                 <div className="ml-10 flex items-baseline space-x-4">
-                    <Link href="/">Home</Link>
-                    <Link href="#">About</Link>
-                    <Link href="#">Contact</Link>
-                    <Link href="/editor">Editor</Link>
+                    <Link href="/">Editor</Link>
                 </div>
                 </div>
             </div>
@@ -30,7 +27,6 @@ export default function (){
                 </div> : 
                 <div className="hidden sm:block">
                     <Link href="/auth">Login</Link>
-                    <Link href="/auth">Sign up</Link>
                 </div>
             }
             <div className="-mr-2 flex sm:hidden">
@@ -46,11 +42,8 @@ export default function (){
         {/*<!-- Mobile menu, show/hide based on menu state. -->*/}
         <div className={`grid grid-cols-1 justify-center sm:hidden ${hidden ? "hidden" : ""}`} id="mobile-menu">
             <Link href="/">Home</Link>
-            <Link href="#">About</Link>
-            <Link href="#">Contact</Link>
             <Link href="/editor">Editor</Link>
             <Link href="/auth">Login</Link>
-            <Link href="/auth">Sign up</Link>
         </div>
     </div>)
 }

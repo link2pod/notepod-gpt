@@ -5,7 +5,7 @@ import { ReactNode, createContext, useState, Dispatch, SetStateAction} from "rea
 
 export function SessionProvider({ children } : {children: ReactNode}) {
   return (
-    <SUR.SessionProvider sessionId="app-session">
+    <SUR.SessionProvider sessionId="app-session" restorePreviousSession={true}>
       {children}
     </SUR.SessionProvider>
   );

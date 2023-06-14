@@ -1,10 +1,6 @@
-import Login from "./login";
-import Signup from "./signup";
+// just here for routing purposes. 
+// Actual login modal in @authModal/auth will get rendered
 
-export default function AuthPage(){
-    return (<>
-        <Login />
-        <br />
-        <Signup />
-    </>)
+export default function (){
+    return null
 }
