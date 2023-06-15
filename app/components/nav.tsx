@@ -17,7 +17,7 @@ export default function (){
                 <Link href="#">Logo</Link>
                 <div className="hidden sm:block">
                 <div className="ml-10 flex items-baseline space-x-4">
-                    <Link href="/">Home</Link>
+                    <Link href="/">Editor</Link>
                 </div>
                 </div>
             </div>
@@ -41,8 +41,15 @@ export default function (){
 
         {/*<!-- Mobile menu, show/hide based on menu state. -->*/}
         <div className={`grid grid-cols-1 justify-center sm:hidden ${hidden ? "hidden" : ""}`} id="mobile-menu">
-            <Link href="/">Home</Link>
-            <Link href="/auth">Login</Link>
+            <Link href="/">Editor</Link>
+            { session.info.isLoggedIn ? 
+                <div onClick={session.logout}>
+                    <Link href="/auth"> Logout </Link>
+                </div> : 
+                <div>
+                    <Link href="/auth">Login</Link>
+                </div>
+            }
         </div>
     </div>)
 }

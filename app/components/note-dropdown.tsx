@@ -1,5 +1,8 @@
 "use client"
 
-export default function(){
+export default function dropdownNode(props: {
+    
+}){
+    
     return <>Note dropdown node</>
 }

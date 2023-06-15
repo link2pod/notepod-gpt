@@ -1,11 +1,14 @@
 'use client'
 
 import * as SUR from "@inrupt/solid-ui-react";
+import { useRouter } from "next/navigation";
 import { ReactNode, createContext, useState, Dispatch, SetStateAction} from "react";
 
 export function SessionProvider({ children } : {children: ReactNode}) {
+  const router = useRouter()
   return (
-    <SUR.SessionProvider sessionId="app-session" restorePreviousSession={true}>
+    <SUR.SessionProvider sessionId="app-session" restorePreviousSession={true} 
+      onSessionRestore={(url) => { router.push('/') }}>
       {children}
     </SUR.SessionProvider>
   );
@@ -14,7 +17,7 @@ export function SessionProvider({ children } : {children: ReactNode}) {
 const UOS = undefined as string | undefined
 
 export const SolidContext = createContext({
-    selectedPodUrl: UOS,
+    selectedNoteUrl: UOS,
     setSelectedPodUrl: undefined as Dispatch<SetStateAction<string | undefined>> | undefined,
 })
 
