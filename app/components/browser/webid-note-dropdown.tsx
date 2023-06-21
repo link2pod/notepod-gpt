@@ -78,14 +78,16 @@ export default function(props: {
 
     return (
     <div> 
-        <div className="flex justify-evenly hover:bg-gray-100 w-full border-b" 
+        <div className="flex justify-evenly hover:bg-gray-100 w-full border-b pr-2" 
         >
             <BsChevronRight 
                 className={`hover:fill-primary my-auto ${showChildren ? "rotate-90" : ""} `}
                 onClick={handleOpenDropdown} 
             />
-            {props.webId}
-            <Popover >
+            <div className="overflow-clip truncate">
+                {props.webId}
+            </div>
+            <Popover>
                 <Popover.Button className={"w-6 h-full pl-1 mr-0"} as="div">
                     <FaEllipsisH className="fill-black hover:fill-primary w-full h-full"/>
                 </Popover.Button>
@@ -98,7 +100,7 @@ export default function(props: {
                 </Popover.Panel>
             </Popover>
         </div>
-        <div className={`grid grid-cols-1 pl-4 py-1 ${showChildren ? "" : "hidden"}`}>
+        <div className={`grid grid-cols-1 pl-4 py-1 ${showChildren ? "" : "hidden"} `}>
             {loading ? <Spinner /> : <>
                 { privateTypeIndexDataset && getThingAll(privateTypeIndexDataset).filter((thing) => 
                         getUrl(thing, SOLID.forClass) === NoteDigitalDocument

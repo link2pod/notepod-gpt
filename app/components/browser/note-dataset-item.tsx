@@ -17,9 +17,11 @@ export default function (props: {
         className="flex justify-between hover:bg-gray-200 w-full px-2"
         onClick={() => setSelectedNoteUrl(props.noteDatasetUrl)}
     >
-        {getContainerUrlPostfix(props.noteDatasetUrl).substring(1)}
-        <Popover >
-            <Popover.Button className={"w-6 h-full"} as="div">
+        <div className="overflow-clip truncate">
+            {getContainerUrlPostfix(props.noteDatasetUrl).substring(1)}
+        </div>
+        <Popover>
+            <Popover.Button className="w-6" as="div">
                 <FaEllipsisH className="fill-black hover:fill-primary w-full h-full"/>
             </Popover.Button>
             <Popover.Panel 
