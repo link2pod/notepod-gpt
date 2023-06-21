@@ -9,69 +9,50 @@ import Spinner from "./components/spinner";
 import { useRouter } from "next/navigation";
 import getEntriesDatabase from "./lib/getEntriesDatabase";
 import { SolidDataset } from "@inrupt/solid-client";
-import NoteDropdown from "./components/note-dropdown";
+import NoteDropdown from "./components/note-container-dropdown";
 import EntryEditor from "./components/entry-editor";
 import Editor from "./components/editor";
+import WebidNoteDropdown from "./components/webid-note-dropdown";
+
+enum Direction {
+  Vertical, Horizontal,
+}
 
 
 export default function Page(){
-    /*
-    const {session, sessionRequestInProgress} = useSession()
-    const {pods, loading: podsLoading, error: podsError} = useGetPods()
-    const [selectedPodId, setSelectedPodId] = useState(0)
-    const [entriesDB, setEntriesDB] = useState(undefined as undefined | SolidDataset) 
-    //const {loading: savingEntry, saveEntry, error: postError } = usePostEntry()
-    const router = useRouter()
-    
-    useEffect(() => { (async () => {
-            console.log(pods)
-        if (pods.length > 0){
-            const entriesDB = await getEntriesDatabase(pods[selectedPodId])
-            setEntriesDB(entriesDB)
-        }
-    })() }, [selectedPodId, pods])
-    console.log(podsLoading, pods)
+    const {session} = useSession()
+    const savedWebIds = [session.info.webId, 
+      "http://localhost:8001/test/profile/card#me"
+    ] 
 
-    if (sessionRequestInProgress) return (<>Logging in <Spinner /> </>)
-    if (!session.info.isLoggedIn) {
-        router.push('/auth')
-        return (<>Redirecting to Login <Spinner /></>)
-    }
-    if (podsLoading) return <>Loading pods <Spinner /></>
-    if (podsError) return <>Error: {podsError}</>
-    console.log(entriesDB)
-*/
     return (<SlideableSeparator 
-        leftSection={<NoteDropdown />}
+        leftSection={<div className="grid grid-cols-1 w-full border-b-2 md:border-none">
+          {savedWebIds.map((webId) => {
+            return webId ? 
+              <div><WebidNoteDropdown webId={webId}/></div>
+              : null
+          })}
+        </div>}
         rightSection={<Editor />}
+        direction={Direction.Horizontal}
     />)
 }
 
 const SlideableSeparator = (props: {
     leftSection: React.ReactNode,
     rightSection: React.ReactNode,
+    direction: Direction,
 }) => {
-    const [separatorPosition, setSeparatorPosition] = useState(50);
-  
-    const handleSeparatorDrag = (e) => {
-      const containerWidth = e.target.parentNode.offsetWidth;
-      const separatorPosition = Math.max(0, Math.min(e.clientX / containerWidth * 100, 100));
-      setSeparatorPosition(separatorPosition);
-    };
-  
     return (
-      <div className="flex h-full">
-        <div className="w-1/2 h-full bg-gray-200">
+      <div className={`flex flex-col ${props.direction === Direction.Horizontal && "md:flex-row"} h-full w-full`}>
+        <div className={`bg-base ${props.direction === Direction.Vertical ? "resize-y" : "md:resize-x"} overflow-auto`}>
           {props.leftSection}
         </div>
-        <div className="relative w-1/2 h-full bg-gray-200">
+        <div
+            className="top-0 bottom-0 left-0 right-0 bg-gray-300 w-1"
+        />
+        <div className="grow bg-base">
           {props.rightSection}
-          <div
-            className="absolute top-0 bottom-0 left-0 right-0 bg-gray-300 cursor-col-resize"
-            style={{ left: `${separatorPosition}%` }}
-            draggable="true"
-            onDrag={handleSeparatorDrag}
-          />
         </div>
       </div>
     );

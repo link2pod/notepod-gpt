@@ -3,6 +3,8 @@
 import { useSession } from "@inrupt/solid-ui-react";
 import Link from "next/link";
 import { useState } from "react";
+import logo from "@/public/logo.svg"
+import Image from "next/image";
 
 export default function (){
 
@@ -14,10 +16,10 @@ export default function (){
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
-                <Link href="#">Logo</Link>
+                <Link href="#" className="h-16"><Image src={logo} alt="logo" className="relative h-full"/></Link>
                 <div className="hidden sm:block">
                 <div className="ml-10 flex items-baseline space-x-4">
-                    <Link href="/">Home</Link>
+                    <Link href="/">Editor</Link>
                 </div>
                 </div>
             </div>
@@ -41,8 +43,15 @@ export default function (){
 
         {/*<!-- Mobile menu, show/hide based on menu state. -->*/}
         <div className={`grid grid-cols-1 justify-center sm:hidden ${hidden ? "hidden" : ""}`} id="mobile-menu">
-            <Link href="/">Home</Link>
-            <Link href="/auth">Login</Link>
+            <Link href="/">Editor</Link>
+            { session.info.isLoggedIn ? 
+                <div onClick={session.logout}>
+                    <Link href="/auth"> Logout </Link>
+                </div> : 
+                <div>
+                    <Link href="/auth">Login</Link>
+                </div>
+            }
         </div>
     </div>)
 }

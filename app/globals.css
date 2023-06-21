@@ -10,6 +10,12 @@
   a {
     @apply text-gray-300 hover:text-white px-3 py-2 rounded-md text-center
   }
+
+}
+@media only screen and (min-width: 768px) {
+  .md:resize-x {
+    resize: horizontal;
+  }
 }
 
 /*
