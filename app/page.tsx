@@ -9,10 +9,10 @@ import Spinner from "./components/spinner";
 import { useRouter } from "next/navigation";
 import getEntriesDatabase from "./lib/getEntriesDatabase";
 import { SolidDataset } from "@inrupt/solid-client";
-import NoteDropdown from "./components/note-container-dropdown";
+import NoteDropdown from "./components/browser/note-container-dropdown";
 import EntryEditor from "./components/entry-editor";
 import Editor from "./components/editor";
-import WebidNoteDropdown from "./components/webid-note-dropdown";
+import WebidNoteDropdown from "./components/browser/webid-note-dropdown";
 
 enum Direction {
   Vertical, Horizontal,

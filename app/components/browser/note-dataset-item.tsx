@@ -1,11 +1,11 @@
 "use client"
 
 import { Popover } from "@headlessui/react"
-import { getContainerUrlPostfix } from "../lib/utilities"
+import { getContainerUrlPostfix } from "../../lib/utilities"
 import { FaEllipsisH } from "react-icons/fa"
 import AddNoteButton from "./add-note-button"
 import { useContext } from "react"
-import { SelectedNoteContext } from "../context-providers"
+import { SelectedNoteContext } from "../../context-providers"
 
 export default function (props: {
     noteDatasetUrl: string
