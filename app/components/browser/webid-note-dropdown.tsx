@@ -6,13 +6,13 @@ import { useContext, useState } from "react";
 import {Disclosure, Popover} from "@headlessui/react"
 import {BsChevronRight} from "react-icons/bs"
 import {FaEllipsisH} from "react-icons/fa"
-import Spinner from "./spinner";
+import Spinner from "../spinner";
 import { FOAF, RDF, SCHEMA_INRUPT } from "@inrupt/vocab-common-rdf";
 import { SOLID } from "@inrupt/vocab-solid"
 import NoteContainerDropdown from "./note-container-dropdown"
 import AddNoteButton from "./add-note-button";
 import AddFolderButton from "./add-folder-button";
-import { NoteDigitalDocument, getPrivateTypeIndexUrl, getRootContainer } from "../lib/utilities";
+import { NoteDigitalDocument, getPrivateTypeIndexUrl, getRootContainer } from "../../lib/utilities";
 
 export default function(props: {
     webId: string,
@@ -78,14 +78,16 @@ export default function(props: {
 
     return (
     <div> 
-        <div className="flex justify-evenly hover:bg-gray-100 w-full border-b" 
+        <div className="flex justify-evenly hover:bg-gray-100 w-full border-b pr-2" 
         >
             <BsChevronRight 
                 className={`hover:fill-primary my-auto ${showChildren ? "rotate-90" : ""} `}
                 onClick={handleOpenDropdown} 
             />
-            {props.webId}
-            <Popover >
+            <div className="overflow-clip truncate">
+                {props.webId}
+            </div>
+            <Popover>
                 <Popover.Button className={"w-6 h-full pl-1 mr-0"} as="div">
                     <FaEllipsisH className="fill-black hover:fill-primary w-full h-full"/>
                 </Popover.Button>
@@ -98,7 +100,7 @@ export default function(props: {
                 </Popover.Panel>
             </Popover>
         </div>
-        <div className={`grid grid-cols-1 pl-4 py-1 ${showChildren ? "" : "hidden"}`}>
+        <div className={`grid grid-cols-1 pl-4 py-1 ${showChildren ? "" : "hidden"} `}>
             {loading ? <Spinner /> : <>
                 { privateTypeIndexDataset && getThingAll(privateTypeIndexDataset).filter((thing) => 
                         getUrl(thing, SOLID.forClass) === NoteDigitalDocument

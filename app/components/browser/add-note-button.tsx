@@ -1,7 +1,9 @@
 "use client"
 
-import { buildThing, createThing, getSolidDatasetWithAcl, getThing, saveSolidDatasetAt, setThing } from "@inrupt/solid-client"
+import { NoteDigitalDocument } from "@/app/lib/utilities"
+import { buildThing, createSolidDataset, createThing, getSolidDatasetWithAcl, getThing, saveSolidDatasetAt, setThing } from "@inrupt/solid-client"
 import { useSession } from "@inrupt/solid-ui-react"
+import { RDF, SCHEMA_INRUPT } from "@inrupt/vocab-common-rdf"
 import { useState } from "react"
 
 export default function(props: {
@@ -21,11 +23,13 @@ export default function(props: {
         const newNoteDatasetUrl = `${props.parentUrl}new-note-(${newNoteCnt})`
         
         const newNoteThing = buildThing(createThing({name: "section1"}))
+            .addIri(RDF.type, NoteDigitalDocument)
+            .addStringNoLocale(SCHEMA_INRUPT.text, "")
             .build()
         // add thing to dataset 
-        const newParentDataset = setThing(parentDataset, newNoteThing)
+        const newNoteDataset = setThing(createSolidDataset(), newNoteThing)
         // save dataset
-        const res = await saveSolidDatasetAt(newNoteDatasetUrl, newParentDataset, {fetch: session.fetch})
+        const res = await saveSolidDatasetAt(newNoteDatasetUrl, newNoteDataset, {fetch: session.fetch})
         console.log(res)
         // create thing 
         // add thing to dataset 

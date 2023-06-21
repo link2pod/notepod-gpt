@@ -4,8 +4,8 @@ import { SolidDataset, Thing, ThingPersisted, getIri, getIriAll, getSolidDataset
 import {SOLID} from "@inrupt/vocab-solid"
 import { useState } from "react"
 import { BsChevronRight } from "react-icons/bs"
-import { getContainerUrlPostfix } from "../lib/utilities"
-import Spinner from "./spinner"
+import { getContainerUrlPostfix } from "../../lib/utilities"
+import Spinner from "../spinner"
 import { Popover } from "@headlessui/react"
 import AddFolderButton from "./add-folder-button"
 import AddNoteButton from "./add-note-button"
@@ -23,7 +23,6 @@ export default function NoteContainerDropdown(props: {
     const [containerDataset, setContainerDataset] = useState(undefined as undefined | SolidDataset)
     const {session} = useSession()
     const containerIri = props.containerIri
-    console.log(containerDataset)
 
     const handleOpenDropdown = async () => {
         setShowChildren(!showChildren)
@@ -43,13 +42,17 @@ export default function NoteContainerDropdown(props: {
     return (
         <div className="flex flex-col">
             <div className="flex justify-between hover:bg-gray-100 w-full rounded px-2 " >
-                <BsChevronRight 
-                    className={`hover:fill-primary my-auto ${showChildren ? "rotate-90" : ""} `}
-                    onClick={handleOpenDropdown} 
-                />
-                    {getContainerUrlPostfix(containerIri.substring(0,containerIri.length-1))}
-                <Popover >
-                    <Popover.Button className={"w-6 h-full pl-1 mr-0"} as="div">
+                <div className="flex overflow-clip">
+                    <BsChevronRight 
+                        className={`hover:fill-primary my-auto ${showChildren ? "rotate-90" : ""} `}
+                        onClick={handleOpenDropdown} 
+                    />
+                    <p className="text-clip sm:truncate">
+                        {getContainerUrlPostfix(containerIri.substring(0,containerIri.length-1))}
+                    </p>
+                </div>
+                <Popover>
+                    <Popover.Button className={"w-6 h-full "} as="div">
                         <FaEllipsisH className="fill-black hover:fill-primary w-full h-full"/>
                     </Popover.Button>
                     <Popover.Panel 
@@ -76,7 +79,6 @@ export default function NoteContainerDropdown(props: {
                                 const noteThing = getThing(containerDataset, noteThingIri)
                                 if (!noteThing) {return null}
                                 if (getIriAll(noteThing, RDF.type).find((typeIri) => {
-                                    console.log(typeIri)
                                     return typeIri === LDP.Container
                                 })){
                                     return <NoteContainerDropdown 
