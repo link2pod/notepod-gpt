@@ -3,6 +3,8 @@
 import { useSession } from "@inrupt/solid-ui-react";
 import Link from "next/link";
 import { useState } from "react";
+import logo from "@/public/logo.svg"
+import Image from "next/image";
 
 export default function (){
 
@@ -14,7 +16,7 @@ export default function (){
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
-                <Link href="#">Logo</Link>
+                <Link href="#" className="h-16"><Image src={logo} alt="logo" className="relative h-full"/></Link>
                 <div className="hidden sm:block">
                 <div className="ml-10 flex items-baseline space-x-4">
                     <Link href="/">Editor</Link>

@@ -10,7 +10,7 @@ export default function (){
     const [showOidcIssuers, setShowOidcIssuers] = useState(false)
 
     useEffect(() => {
-      setCurrentUrl(window.location.href)
+      setCurrentUrl(window.location.origin)
     })
 
     const handleLogin = (e: any) => {

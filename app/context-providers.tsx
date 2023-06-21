@@ -6,9 +6,12 @@ import { ReactNode, createContext, useState, Dispatch, SetStateAction} from "rea
 
 export function SessionProvider({ children } : {children: ReactNode}) {
   const router = useRouter()
+      //onSessionRestore={(url) => { router.push('/') }}>
   return (
-    <SUR.SessionProvider sessionId="app-session" restorePreviousSession={true} 
-      onSessionRestore={(url) => { router.push('/') }}>
+    <SUR.SessionProvider 
+      sessionId="app-session" 
+      restorePreviousSession={true} 
+    >
       {children}
     </SUR.SessionProvider>
   );
@@ -16,16 +19,16 @@ export function SessionProvider({ children } : {children: ReactNode}) {
 
 const UOS = undefined as string | undefined
 
-export const SolidContext = createContext({
+export const SelectedNoteContext = createContext({
     selectedNoteUrl: UOS,
-    setSelectedPodUrl: undefined as Dispatch<SetStateAction<string | undefined>> | undefined,
+    setSelectedNoteUrl: undefined as Dispatch<SetStateAction<string | undefined>> | undefined,
 })
 
-export function SolidContextProvider({children}: {children: ReactNode}){
-  const [selectedPodUrl, setSelectedPodUrl] = useState(UOS)
-  return (<SolidContext.Provider value={{selectedPodUrl, setSelectedPodUrl}}>
+export function SelectedNoteContextProvider({children}: {children: ReactNode}){
+  const [selectedNoteUrl, setSelectedNoteUrl] = useState(UOS)
+  return (<SelectedNoteContext.Provider value={{selectedNoteUrl, setSelectedNoteUrl}}>
     {children}
-  </SolidContext.Provider>)
+  </SelectedNoteContext.Provider>)
 }
 
 export const GPTContext = createContext({

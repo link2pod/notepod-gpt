@@ -14,13 +14,18 @@ export default function MyDialog() {
     const [isOpen, setIsOpen] = useState(true)
     const {session, sessionRequestInProgress} = useSession()
     const router = useRouter()
+    if (session.info.isLoggedIn) {
+        router.push("/")
+        return null
+    }
+
+    //return (<Loading ></Loading>)
 
     return (
     <Dialog
-        open={isOpen}
+        open={true}
         onClose={() => {
-            setIsOpen(false)
-            router.push("/")
+            router.back()
         }}
         className="relative z-50"
     >

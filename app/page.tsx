@@ -9,10 +9,10 @@ import Spinner from "./components/spinner";
 import { useRouter } from "next/navigation";
 import getEntriesDatabase from "./lib/getEntriesDatabase";
 import { SolidDataset } from "@inrupt/solid-client";
-import NoteDropdown from "./components/note-dropdown";
+import NoteDropdown from "./components/note-container-dropdown";
 import EntryEditor from "./components/entry-editor";
 import Editor from "./components/editor";
-import WebidSelector from "./components/webid-selector";
+import WebidNoteDropdown from "./components/webid-note-dropdown";
 
 enum Direction {
   Vertical, Horizontal,
@@ -20,38 +20,19 @@ enum Direction {
 
 
 export default function Page(){
-    /*
-    const {session, sessionRequestInProgress} = useSession()
-    const {pods, loading: podsLoading, error: podsError} = useGetPods()
-    const [selectedPodId, setSelectedPodId] = useState(0)
-    const [entriesDB, setEntriesDB] = useState(undefined as undefined | SolidDataset) 
-    //const {loading: savingEntry, saveEntry, error: postError } = usePostEntry()
-    const router = useRouter()
-    
-    useEffect(() => { (async () => {
-            console.log(pods)
-        if (pods.length > 0){
-            const entriesDB = await getEntriesDatabase(pods[selectedPodId])
-            setEntriesDB(entriesDB)
-        }
-    })() }, [selectedPodId, pods])
-    console.log(podsLoading, pods)
+    const {session} = useSession()
+    const savedWebIds = [session.info.webId, 
+      "http://localhost:8001/test/profile/card#me"
+    ] 
 
-    if (sessionRequestInProgress) return (<>Logging in <Spinner /> </>)
-    if (!session.info.isLoggedIn) {
-        router.push('/auth')
-        return (<>Redirecting to Login <Spinner /></>)
-    }
-    if (podsLoading) return <>Loading pods <Spinner /></>
-    if (podsError) return <>Error: {podsError}</>
-    console.log(entriesDB)
-*/
     return (<SlideableSeparator 
-        leftSection={<SlideableSeparator 
-          leftSection={<WebidSelector />}
-          rightSection={<NoteDropdown />}
-          direction={Direction.Vertical}
-        /> }
+        leftSection={<div className="grid grid-cols-1 w-full border-b-2 md:border-none">
+          {savedWebIds.map((webId) => {
+            return webId ? 
+              <div><WebidNoteDropdown webId={webId}/></div>
+              : null
+          })}
+        </div>}
         rightSection={<Editor />}
         direction={Direction.Horizontal}
     />)
