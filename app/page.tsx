@@ -43,7 +43,7 @@ const SlideableSeparator = (props: {
 }) => {
     return (
       <div className={`flex flex-col ${props.direction === Direction.Horizontal && "md:flex-row"} h-full w-full`}>
-        <div className={`bg-base overflow-auto ${props.direction === Direction.Vertical ? "resize-y" : "md:resize-x"}`}>
+        <div className={`bg-base overflow-y-auto ${props.direction === Direction.Vertical ? "resize-y" : "md:resize-x"}`}>
           {props.leftSection}
         </div>
         <div

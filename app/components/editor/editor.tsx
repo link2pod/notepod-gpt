@@ -44,7 +44,7 @@ export default function (){
 
     return (<div className="relative w-full h-full flex flex-col overflow-y-auto">
         <div className="w-full justify-between flex sticky top-0 p-2 border-b-2 space-x-1">
-            <p className="text-gray-200">{savingStatus}</p>
+            <p className="text-gray-200 md:w-20">{savingStatus}</p>
             <p className="text-primary truncate flex-initial">{selectedNoteUrl}</p>
             <div className="flex justify-evenly space-x-2">
                 <BsShareFill className="hover:fill-primary"/>
