@@ -11,7 +11,7 @@ export default function Login(){
 
     useEffect(() => {
       setCurrentUrl(window.location.origin)
-    })
+    }, [])
 
     const handleLogin = (e: any) => {
         session.login({oidcIssuer, redirectUrl: currentUrl, clientName: "notepod-gpt"})

@@ -7,7 +7,7 @@ import AddNoteButton from "./add-note-button"
 import { useContext } from "react"
 import { SelectedNoteContext } from "../../context-providers"
 
-export default function (props: {
+export default function NoteDatasetItem(props: {
     noteDatasetUrl: string
 }){
     const {setSelectedNoteUrl} = useContext(SelectedNoteContext)

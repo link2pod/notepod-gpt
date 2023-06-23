@@ -1,14 +1,6 @@
 "use client"
 
 import { useSession } from "@inrupt/solid-ui-react";
-import PodBrowser from "./components/pod-browser";
-import useGetPods from "./lib/useGetPods";
-import { useEffect, useState } from "react";
-import Spinner from "./components/spinner";
-import { useRouter } from "next/navigation";
-import getEntriesDatabase from "./lib/getEntriesDatabase";
-import { SolidDataset } from "@inrupt/solid-client";
-import NoteDropdown from "./components/browser/note-container-dropdown";
 import Editor from "./components/editor/editor";
 import WebidNoteDropdown from "./components/browser/webid-note-dropdown";
 
