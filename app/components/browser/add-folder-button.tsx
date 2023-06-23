@@ -8,7 +8,7 @@ import { useState } from "react"
 import { NoteDigitalDocument, getPrivateTypeIndexUrl, getRootContainer, } from "../../lib/utilities"
 import { RDF, SCHEMA_INRUPT } from "@inrupt/vocab-common-rdf"
 
-export default function(props: {
+export default function AddFolderButton(props: {
     webId: string
 }| {
     parentContainerUrl: string,

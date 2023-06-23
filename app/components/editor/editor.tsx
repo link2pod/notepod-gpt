@@ -1,20 +1,25 @@
 "use client"
 
 import { SelectedNoteContext } from "@/app/context-providers"
-import { SolidDataset, WithAcl, getSolidDatasetWithAcl, getStringNoLocale, getThingAll, saveSolidDatasetAt, setStringNoLocale, setThing } from "@inrupt/solid-client"
+import { AclDataset, SolidDataset, WithAcl, WithResourceInfo, createAcl, getResourceAcl, getSolidDatasetWithAcl, getStringNoLocale, getThingAll, saveAclFor, saveSolidDatasetAt, setStringNoLocale, setThing } from "@inrupt/solid-client"
 import { useSession } from "@inrupt/solid-ui-react"
 import { SCHEMA_INRUPT } from "@inrupt/vocab-common-rdf"
 import { ChangeEvent, useCallback, useContext, useEffect, useState } from "react"
 import Spinner from "../spinner"
 import _ from "lodash"
 import { BsFullscreen, BsShareFill } from "react-icons/bs"
+import ShareModal from "../share-modal"
+import { time } from "console"
+
 
 export default function (){
     const {selectedNoteUrl} = useContext(SelectedNoteContext)
     const {session} = useSession()
     const [loading, setLoading] = useState(true)
     const [savingStatus, setSavingStatus] = useState("")
-    const [noteDataset, setNoteDataset] = useState(undefined as undefined | SolidDataset & WithAcl)
+    const [noteDataset, setNoteDataset] = useState(undefined as undefined 
+        | Awaited<ReturnType<typeof getSolidDatasetWithAcl>>)
+    const [showShareModal, setShowShareModal] = useState(false)
     const debouncedSaveNoteDataset = useCallback(
         _.debounce(async (noteDataset: SolidDataset) => {
             if (selectedNoteUrl) {
@@ -41,16 +46,19 @@ export default function (){
         No note selected
     </div>)
 
-
     return (<div className="relative w-full h-full flex flex-col overflow-y-auto">
+        {/**Toolbar at top*/}
         <div className="w-full justify-between flex sticky top-0 p-2 border-b-2 space-x-1">
-            <p className="text-gray-200">{savingStatus}</p>
+            <p className="text-gray-200 md:w-20">{savingStatus}</p>
             <p className="text-primary truncate flex-initial">{selectedNoteUrl}</p>
             <div className="flex justify-evenly space-x-2">
-                <BsShareFill className="hover:fill-primary"/>
-                <BsFullscreen className="hover:fill-primary"/>
+                {noteDataset && <BsShareFill className="hover:fill-primary hover:cursor-pointer" onClick={(e) => {
+                    setShowShareModal(true)
+                }}/>}
+                <BsFullscreen className="hover:fill-primary hover:cursor-pointer"/>
             </div>
         </div>
+        {/**Main editor */}
         <div className="w-full h-full overflow-y-auto">
             {loading? <Spinner />: noteDataset && getThingAll(noteDataset).map((noteThing) => {
                 const text = getStringNoLocale(noteThing, SCHEMA_INRUPT.text)
@@ -77,5 +85,10 @@ export default function (){
                 </div>
             })}
         </div>
+        {noteDataset && <ShareModal 
+            dataset={noteDataset}
+            isOpen={showShareModal}
+            setIsOpen={setShowShareModal}
+        />}
     </div>)
 }

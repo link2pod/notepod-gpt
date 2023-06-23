@@ -10,7 +10,7 @@ import Loading from './loading'
 import Logout from './logout'
 
 // Renders login and signup forms in a modal
-export default function MyDialog() {
+export default function AuthPage() {
     const [isOpen, setIsOpen] = useState(true)
     const {session, sessionRequestInProgress} = useSession()
     const router = useRouter()
@@ -23,7 +23,7 @@ export default function MyDialog() {
 
     return (
     <Dialog
-        open={true}
+        open={isOpen}
         onClose={() => {
             router.back()
         }}

@@ -1,4 +1,4 @@
-import { ProfileAll, getProfileAll, getThing, getThingAll, getUrl } from "@inrupt/solid-client";
+import { ProfileAll, getProfileAll, getSolidDatasetWithAcl, getThing, getThingAll, getUrl } from "@inrupt/solid-client";
 import { getDefaultSession } from "@inrupt/solid-client-authn-browser";
 import {SOLID} from "@inrupt/vocab-solid";
 import { forEach } from "lodash";
@@ -64,4 +64,6 @@ export async function getPrivateTypeIndexUrl(webId: string){
     }
     return privateTypeIndexUrl
 }
+
+export type SolidDatasetWithAcl = Awaited<ReturnType<typeof getSolidDatasetWithAcl>>
 
