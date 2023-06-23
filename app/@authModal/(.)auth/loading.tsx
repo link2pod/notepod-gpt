@@ -4,7 +4,7 @@ import Spinner from "@/app/components/spinner";
 import { Dialog } from "@headlessui/react";
 import { useRouter } from "next/navigation";
 
-export default function (){
+export default function Loading(){
     const router = useRouter()
     return (<Dialog open={true} onClose={()=>{router.back()}} className="relative z-50">
         {/* The backdrop, rendered as a fixed sibling to the panel container */}

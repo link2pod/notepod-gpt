@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useSession } from "@inrupt/solid-ui-react";
 
-export default function (){
+export default function Login(){
     const {session} = useSession()
     const [oidcIssuer, setOidcIssuer] = useState("Enter Oidc Issuer")
     const [currentUrl, setCurrentUrl] = useState("")
