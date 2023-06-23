@@ -6,7 +6,7 @@ import { useSession } from "@inrupt/solid-ui-react"
 import { RDF, SCHEMA_INRUPT } from "@inrupt/vocab-common-rdf"
 import { useState } from "react"
 
-export default function(props: {
+export default function AddNoteButton(props: {
     parentUrl: string, 
 }){
     const [active, setActive] = useState(false)
