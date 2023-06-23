@@ -10,7 +10,7 @@ import { getDefaultSession } from '@inrupt/solid-client-authn-browser'
 import { SolidDatasetWithAcl } from '../lib/utilities'
 
 // Renders sharing interface for notes and noteContainers
-export default function (props: {
+export default function ShareModal (props: {
     dataset: SolidDatasetWithAcl, 
     isOpen: boolean, 
     setIsOpen: Dispatch<SetStateAction<boolean>>,

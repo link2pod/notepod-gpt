@@ -5,7 +5,7 @@ import { Dialog } from '@headlessui/react'
 import {IoIosCloseCircleOutline} from 'react-icons/io'
 
 // Renders sharing interface for 
-export default function (props: {
+export default function BaseModal (props: {
     isOpen: boolean, 
     setIsOpen: Dispatch<SetStateAction<boolean>>,
     title?: string , 

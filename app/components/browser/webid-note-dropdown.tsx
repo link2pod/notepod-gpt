@@ -14,7 +14,7 @@ import AddNoteButton from "./add-note-button";
 import AddFolderButton from "./add-folder-button";
 import { NoteDigitalDocument, getPrivateTypeIndexUrl, getRootContainer } from "../../lib/utilities";
 
-export default function(props: {
+export default function WebidNoteDropdown(props: {
     webId: string,
 }){
     const {session} = useSession()

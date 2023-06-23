@@ -6,7 +6,7 @@ import { useState } from "react";
 import logo from "@/public/logo.svg"
 import Image from "next/image";
 
-export default function (){
+export default function NavBar(){
 
     const [hidden, setHidden] = useState(true)
     const {session} = useSession()

@@ -2,7 +2,7 @@
 
 import { Dispatch, SetStateAction, useContext, useState } from "react";
 
-export default function ({selectedPodId, setSelectedPodId, pods}: 
+export default function PodBrowser({selectedPodId, setSelectedPodId, pods}: 
     {selectedPodId: number, setSelectedPodId: Dispatch<SetStateAction<number>>, pods: string[]}){
 
     return (

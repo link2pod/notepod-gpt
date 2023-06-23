@@ -12,7 +12,7 @@ import ShareModal from "../share-modal"
 import { time } from "console"
 
 
-export default function (){
+export default function Editor(){
     const {selectedNoteUrl} = useContext(SelectedNoteContext)
     const {session} = useSession()
     const [loading, setLoading] = useState(true)
@@ -40,7 +40,7 @@ export default function (){
             setNoteDataset(dataset)
             setLoading(false)
         }
-    })() }, [selectedNoteUrl])
+    })() }, [selectedNoteUrl, session.fetch])
 
     if (!selectedNoteUrl) return (<div className="w-full flex justify-center pt-2">
         No note selected
