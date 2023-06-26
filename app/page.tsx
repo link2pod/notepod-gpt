@@ -12,7 +12,6 @@ enum Direction {
 export default function Page(){
     const {session} = useSession()
     const savedWebIds = [session.info.webId, 
-      "http://localhost:8001/test/profile/card#me"
     ] 
 
     return (<SlideableSeparator 

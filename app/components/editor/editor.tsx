@@ -10,6 +10,8 @@ import _ from "lodash"
 import { BsFullscreen, BsShareFill } from "react-icons/bs"
 import ShareModal from "../share-modal"
 import { time } from "console"
+import { generateMockQuiz } from "@/app/lib/utilities"
+import MockQuizModal from "../mock-quiz-modal"
 
 
 export default function Editor(){
@@ -20,6 +22,7 @@ export default function Editor(){
     const [noteDataset, setNoteDataset] = useState(undefined as undefined 
         | Awaited<ReturnType<typeof getSolidDatasetWithAcl>>)
     const [showShareModal, setShowShareModal] = useState(false)
+    const [showMockQuizModal, setShowMockQuizModal] = useState(false)
     const debouncedSaveNoteDataset = useCallback(
         _.debounce(async (noteDataset: SolidDataset) => {
             if (selectedNoteUrl) {
@@ -56,6 +59,7 @@ export default function Editor(){
                     setShowShareModal(true)
                 }}/>}
                 <BsFullscreen className="hover:fill-primary hover:cursor-pointer"/>
+                <div onClick={() => {setShowMockQuizModal(true)}}>Mock Quiz</div>
             </div>
         </div>
         {/**Main editor */}
@@ -85,10 +89,14 @@ export default function Editor(){
                 </div>
             })}
         </div>
-        {noteDataset && <ShareModal 
+        {noteDataset && <><ShareModal 
             dataset={noteDataset}
             isOpen={showShareModal}
             setIsOpen={setShowShareModal}
-        />}
+        /> <MockQuizModal 
+            selectedNoteUrl={selectedNoteUrl}
+            isOpen={showMockQuizModal}
+            setIsOpen={setShowMockQuizModal}
+        /></>}
     </div>)
 }
