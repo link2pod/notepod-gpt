@@ -5,7 +5,7 @@ import { getDefaultSession } from "@inrupt/solid-client-authn-browser"
 import { useSession } from "@inrupt/solid-ui-react"
 import { SOLID } from "@inrupt/vocab-solid"
 import { useState } from "react"
-import { NoteDigitalDocument, getPrivateTypeIndexUrl, getRootContainer, } from "../../lib/utilities"
+import { NoteDigitalDocument, getTypeIndexUrl, getRootContainer, } from "../../lib/utilities"
 import { RDF, SCHEMA_INRUPT } from "@inrupt/vocab-common-rdf"
 
 export default function AddFolderButton(props: {
