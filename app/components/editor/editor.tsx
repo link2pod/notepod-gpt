@@ -1,15 +1,14 @@
 "use client"
 
 import { SelectedNoteContext } from "@/app/context-providers"
-import { AclDataset, SolidDataset, WithAcl, WithResourceInfo, createAcl, getResourceAcl, getSolidDatasetWithAcl, getStringNoLocale, getThingAll, saveAclFor, saveSolidDatasetAt, setStringNoLocale, setThing } from "@inrupt/solid-client"
+import { SolidDataset, getSolidDatasetWithAcl, getStringNoLocale, getThingAll,  saveSolidDatasetAt, setStringNoLocale, setThing } from "@inrupt/solid-client"
 import { useSession } from "@inrupt/solid-ui-react"
 import { SCHEMA_INRUPT } from "@inrupt/vocab-common-rdf"
-import { ChangeEvent, useCallback, useContext, useEffect, useState } from "react"
+import { useCallback, useContext, useEffect, useState } from "react"
 import Spinner from "../spinner"
 import _ from "lodash"
 import { BsFullscreen, BsShareFill } from "react-icons/bs"
 import ShareModal from "../share-modal"
-import { time } from "console"
 
 
 export default function Editor(){
@@ -85,10 +84,11 @@ export default function Editor(){
                 </div>
             })}
         </div>
-        {noteDataset && <ShareModal 
+        {noteDataset && <><ShareModal 
             dataset={noteDataset}
             isOpen={showShareModal}
             setIsOpen={setShowShareModal}
-        />}
+        /> 
+        </>}
     </div>)
 }

@@ -66,4 +66,3 @@ export async function getPrivateTypeIndexUrl(webId: string){
 }
 
 export type SolidDatasetWithAcl = Awaited<ReturnType<typeof getSolidDatasetWithAcl>>
-

@@ -5,10 +5,12 @@ import Link from "next/link";
 import { useState } from "react";
 import logo from "@/public/logo.svg"
 import Image from "next/image";
+import MockQuizModal from "./mock-quiz-modal";
 
 export default function NavBar(){
 
     const [hidden, setHidden] = useState(true)
+    const [showMockQuizModal, setShowMockQuizModal] = useState(false)
     const {session} = useSession()
 
     return ( 
@@ -20,6 +22,7 @@ export default function NavBar(){
                 <div className="hidden sm:block">
                 <div className="ml-10 flex items-baseline space-x-4">
                     <Link href="/">Editor</Link>
+                    <a onClick={() => setShowMockQuizModal(true)}>Mock Quiz</a>
                 </div>
                 </div>
             </div>
@@ -53,5 +56,10 @@ export default function NavBar(){
                 </div>
             }
         </div>
+        {/** Modals */}
+        <MockQuizModal 
+            setIsOpen={(b) => setShowMockQuizModal(b)}
+            isOpen={showMockQuizModal}
+        />
     </div>)
 }
