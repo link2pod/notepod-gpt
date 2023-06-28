@@ -24,8 +24,11 @@ export default function WebidNoteDropdown(props: {
     const {data: profileAll, isLoading, error}  
         = useSWR(showChildren ? props.webId : null, (webId) => {
             console.log("From profileAll fetcher", session.info)
-            return getProfileAll( webId, {fetch: getDefaultSession().fetch}
-        )})
+            return getProfileAll( webId, {fetch: session.fetch}
+        )}, {
+            revalidateIfStale: false, 
+            revalidateOnReconnect: false,
+        })
     
     // After profileAll is fetched, get the private and public TypeIndexDatasets
     const [privateTypeIndexUrl, publicTypeIndexUrl] 
