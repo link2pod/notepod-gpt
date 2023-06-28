@@ -9,6 +9,11 @@ import { useContext, useEffect, useState } from "react"
 import { useRouter } from "next/navigation";
 import BaseModal from "./base-modal";
 
+// Displays modal that when active on Dom, will: 
+//   - fetch the SolidDataset from the selectedNoteUrl in SelectedNoteContext
+//   - Concatenate all Schema:text predicates from all things in the dataset
+//   - Use the concated string to query OpenAI Chat completions endpoint to generate mock quiz
+//   - Display OpenAI's data in the modal 
 export default function MockQuizModal(props: {
   isOpen: boolean, 
   setIsOpen: (e: boolean) => any, 
@@ -21,7 +26,7 @@ export default function MockQuizModal(props: {
 
   // Fetch note data whenever the selectedNoteUrl changes
   useEffect (() => {(async () => {
-    setLoading(true)
+    setLoading(true) // Display loading dots in modal
     if (selectedNoteUrl) {
       const noteDataset 
         = await getSolidDataset(selectedNoteUrl, {fetch: session.fetch})
@@ -54,11 +59,12 @@ export default function MockQuizModal(props: {
       const quizText = quizJson.choices[0].message.content
       setQuizText(quizText)
       */
-      setQuizText(`My name is \n you are \n\nAnswers:\n yes\nno`)
+      // Debugging text to reduce openAI query
+      setQuizText(`My name is \n you are \n\nAnswers:\n yes\nno`) 
     }
-    setLoading(false)
+    setLoading(false) // Remove loading dots in modal 
 
-  })()}, [selectedNoteUrl])
+  })()}, [selectedNoteUrl, session.fetch])
 
   return (<BaseModal
     {...props}
@@ -70,9 +76,18 @@ export default function MockQuizModal(props: {
   </BaseModal>)
 }
 
+// input: 
+// text: string 
+//    - an OpenAI generated text string containing mock-quiz data
+//    - Will contain sentences seperated by '\n' characters
+// output: react fragment with each sentence in text wrapped with a <p></p> 
+//    - end of sentences are denoted by '\n' characters in text 
+//    - Blank lines will be mapped to an <hr /> element 
 function QuizDisplay(props: {text: string}){
   return (<>
-    {props.text.split('\n').map((s) => 
-      s === "" ? <hr className="border border-gray-200"/> : <p>{s}</p>)}
+    {props.text.split('\n').map((s,id) => 
+      s === "" ? 
+        <hr className="border border-gray-200" key={`mqst${id}`}/> 
+        : <p key={`mqst${id}`}>{s}</p>)}
   </>)
 }

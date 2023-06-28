@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react";
+import { FormEventHandler, useEffect, useState } from "react";
 import { useSession } from "@inrupt/solid-ui-react";
 import { useRouter } from "next/navigation";
 
@@ -15,8 +15,9 @@ export default function Login(){
       setCurrentUrl(window.location.origin)
     }, [])
 
-    const handleLogin = (e: any) => {
-        session.login({oidcIssuer, redirectUrl: currentUrl, clientName: "notepod-gpt"})
+    const handleLogin: FormEventHandler<HTMLFormElement> = (e) => {
+      e.preventDefault()
+      session.login({oidcIssuer, redirectUrl: currentUrl, clientName: "notepod-gpt"})
     }
 
     const oidcIssuers = ["https://inrupt.net", "http://localhost:8000"]

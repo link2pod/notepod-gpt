@@ -1,9 +1,16 @@
 
+/**
+ * POST /api/mockquiz { 
+ *  body: {
+ *      noteText: "..." as string
+ *  }
+ * }
+ */
 export async function POST(request: Request){
     const reqJson = await request.json()
-    console.log(reqJson)
     const noteText = reqJson.noteText as string | undefined 
-    if (!noteText) {
+
+    if (!noteText) { 
         return new Response('Missing note text', {
             status: 500, 
         })
@@ -16,8 +23,8 @@ export async function POST(request: Request){
             "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
         },
         body: JSON.stringify({
-            model: "gpt-3.5-turbo",
-            messages: [
+            model: "gpt-3.5-turbo", // Must be model that supports chat 
+            messages: [ // Commands to prepare OpenAI's Chat api 
                 {
                     "role": "system",
                     "content": "You are a teaching assistant.",
@@ -30,7 +37,7 @@ export async function POST(request: Request){
                     "role": "assistant",
                     "content": "Sure! Can you share the notes?",
                 }, 
-                {
+                { // noteText is supplied in the request
                     "role": "user",
                     "content": `${noteText}`,
                 }, 

@@ -1,11 +1,9 @@
 'use client'
 
 import * as SUR from "@inrupt/solid-ui-react";
-import { useRouter } from "next/navigation";
 import { ReactNode, createContext, useState, Dispatch, SetStateAction} from "react";
 
 export function SessionProvider({ children } : {children: ReactNode}) {
-  const router = useRouter()
       //onSessionRestore={(url) => { router.push('/') }}>
   return (
     <SUR.SessionProvider 
