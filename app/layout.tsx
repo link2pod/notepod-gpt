@@ -12,7 +12,6 @@ export const metadata = {
 
 export default function RootLayout(props: {
   children: React.ReactNode,
-  modals: React.ReactNode,
 }) {
   return (
     <html lang="en">
@@ -24,7 +23,6 @@ export default function RootLayout(props: {
             </div>
             <div className='flex-1 overflow-clip'>
               {props.children}
-              {props.modals}
             </div>
           </body>
         </SelectedNoteContextProvider>

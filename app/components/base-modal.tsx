@@ -4,10 +4,12 @@ import { Dispatch, ReactNode, SetStateAction } from 'react'
 import { Dialog } from '@headlessui/react'
 import {IoIosCloseCircleOutline} from 'react-icons/io'
 
+type setboolean = (e: boolean) => any
+
 // Renders sharing interface for 
 export default function BaseModal (props: {
     isOpen: boolean, 
-    setIsOpen: Dispatch<SetStateAction<boolean>>,
+    setIsOpen: setboolean,
     title?: string , 
     children: ReactNode,
 }) {

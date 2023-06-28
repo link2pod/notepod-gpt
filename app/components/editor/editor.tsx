@@ -1,17 +1,14 @@
 "use client"
 
 import { SelectedNoteContext } from "@/app/context-providers"
-import { AclDataset, SolidDataset, WithAcl, WithResourceInfo, createAcl, getResourceAcl, getSolidDatasetWithAcl, getStringNoLocale, getThingAll, saveAclFor, saveSolidDatasetAt, setStringNoLocale, setThing } from "@inrupt/solid-client"
+import { SolidDataset, getSolidDatasetWithAcl, getStringNoLocale, getThingAll,  saveSolidDatasetAt, setStringNoLocale, setThing } from "@inrupt/solid-client"
 import { useSession } from "@inrupt/solid-ui-react"
 import { SCHEMA_INRUPT } from "@inrupt/vocab-common-rdf"
-import { ChangeEvent, useCallback, useContext, useEffect, useState } from "react"
+import { useCallback, useContext, useEffect, useState } from "react"
 import Spinner from "../spinner"
 import _ from "lodash"
 import { BsFullscreen, BsShareFill } from "react-icons/bs"
 import ShareModal from "../share-modal"
-import { time } from "console"
-import { generateMockQuiz } from "@/app/lib/utilities"
-import MockQuizModal from "../mock-quiz-modal"
 
 
 export default function Editor(){
@@ -22,7 +19,6 @@ export default function Editor(){
     const [noteDataset, setNoteDataset] = useState(undefined as undefined 
         | Awaited<ReturnType<typeof getSolidDatasetWithAcl>>)
     const [showShareModal, setShowShareModal] = useState(false)
-    const [showMockQuizModal, setShowMockQuizModal] = useState(false)
     const debouncedSaveNoteDataset = useCallback(
         _.debounce(async (noteDataset: SolidDataset) => {
             if (selectedNoteUrl) {
@@ -59,7 +55,6 @@ export default function Editor(){
                     setShowShareModal(true)
                 }}/>}
                 <BsFullscreen className="hover:fill-primary hover:cursor-pointer"/>
-                <div onClick={() => {setShowMockQuizModal(true)}}>Mock Quiz</div>
             </div>
         </div>
         {/**Main editor */}
@@ -93,10 +88,7 @@ export default function Editor(){
             dataset={noteDataset}
             isOpen={showShareModal}
             setIsOpen={setShowShareModal}
-        /> <MockQuizModal 
-            selectedNoteUrl={selectedNoteUrl}
-            isOpen={showMockQuizModal}
-            setIsOpen={setShowMockQuizModal}
-        /></>}
+        /> 
+        </>}
     </div>)
 }

@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { useSession } from "@inrupt/solid-ui-react";
+import { useRouter } from "next/navigation";
 
 export default function Login(){
     const {session} = useSession()
     const [oidcIssuer, setOidcIssuer] = useState("Enter Oidc Issuer")
     const [currentUrl, setCurrentUrl] = useState("")
     const [showOidcIssuers, setShowOidcIssuers] = useState(false)
+    const router = useRouter()
 
     useEffect(() => {
       setCurrentUrl(window.location.origin)
@@ -48,7 +50,7 @@ export default function Login(){
         </div>
         <div className="flex justify-between mt-4">
           <button type="submit" className="bg-neutral">Submit</button>
-          <button type="reset" className="bg-neutral">Cancel</button>
+          <button type="reset" className="bg-neutral" onClick={() => router.push('/')}>Cancel</button>
         </div>
       </form>
     )
