@@ -1,7 +1,7 @@
 "use client"
 
-import { SelectedNoteContext } from "@/app/context-providers"
-import { SolidDataset, getSolidDatasetWithAcl, getStringNoLocale, getThingAll,  saveSolidDatasetAt, setStringNoLocale, setThing } from "@inrupt/solid-client"
+import { SelectedNoteContext, ToastContext } from "@/app/context-providers"
+import { SolidDataset, getAgentAccess, getPublicAccess, getSolidDatasetWithAcl, getStringNoLocale, getThingAll,  saveSolidDatasetAt, setStringNoLocale, setThing } from "@inrupt/solid-client"
 import { useSession } from "@inrupt/solid-ui-react"
 import { SCHEMA_INRUPT } from "@inrupt/vocab-common-rdf"
 import { useCallback, useContext, useEffect, useState } from "react"
@@ -10,7 +10,6 @@ import _ from "lodash"
 import { BsFullscreen, BsShareFill } from "react-icons/bs"
 import ShareModal from "../share-modal"
 
-
 export default function Editor(){
     const {selectedNoteUrl} = useContext(SelectedNoteContext)
     const {session} = useSession()
@@ -18,7 +17,9 @@ export default function Editor(){
     const [savingStatus, setSavingStatus] = useState("")
     const [noteDataset, setNoteDataset] = useState(undefined as undefined 
         | Awaited<ReturnType<typeof getSolidDatasetWithAcl>>)
-    const [showShareModal, setShowShareModal] = useState(false)
+    const [showShareModal, setShowShareModal]  // Sharing note permissions modal
+        = useState(false)
+    const {toast} = useContext(ToastContext) // show toasts
     const debouncedSaveNoteDataset = useCallback(
         _.debounce(async (noteDataset: SolidDataset) => {
             if (selectedNoteUrl) {
@@ -26,8 +27,12 @@ export default function Editor(){
                     await saveSolidDatasetAt(selectedNoteUrl, noteDataset, {
                         fetch: session.fetch
                     })
-                } catch(e) {console.error(e)}
-                setSavingStatus("saved")
+                    setSavingStatus("saved")
+                } catch(e) {
+                    console.error(e) 
+                    toast(<p>Error</p>)
+                    setSavingStatus("Error")
+                }
             }
         }, 2000)
     , [selectedNoteUrl])
@@ -73,6 +78,22 @@ export default function Editor(){
                         className="w-full h-full border border-gray-200"
                         value={text ? text : undefined}
                         onChange={(e) => {
+                            // Check if note is publically editable
+                            const publicAccess = getPublicAccess(noteDataset)
+                            if (!publicAccess || !publicAccess.write){
+                                // No public access, so check private access
+                                const webId = session.info.webId 
+                                if (!webId){ // Not logged in 
+                                    // Show toast for not logged in
+                                } else {
+                                    const access = getAgentAccess(noteDataset, webId)
+                                    if (!access || !access.write){
+                                        toast(<>Warning: no private access</>)
+                                        // no private access, check group access TODO 
+                                    }
+                                }
+                            }
+
                             const newNoteThing = setStringNoLocale(
                                 noteThing, SCHEMA_INRUPT.text, e.target.value)
                             const newNoteDataset = setThing(noteDataset, newNoteThing)

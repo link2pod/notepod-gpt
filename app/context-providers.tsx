@@ -29,7 +29,21 @@ export function SelectedNoteContextProvider({children}: {children: ReactNode}){
   </SelectedNoteContext.Provider>)
 }
 
-export const GPTContext = createContext({
-  token: UOS,
-  //setToken: useState(UOS)[1],
+export const ToastContext = createContext({
+  toasts: [] as ReactNode[],
+  toast: ((e) => {}) as (rn : ReactNode) => any,
 })
+
+export function ToastContextProvider(props: {
+  children: ReactNode,
+}){
+  const [toasts, setToasts] = useState([] as ReactNode[])
+  return (<ToastContext.Provider
+    value={{toasts, toast: (e: ReactNode) => {
+      setToasts([e,...toasts])
+      setTimeout(()=>{setToasts(toasts)}, 5000)
+    }}}
+  >{props.children}</ToastContext.Provider>)
+}
+
+

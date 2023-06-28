@@ -3,6 +3,9 @@
 import { useSession } from "@inrupt/solid-ui-react";
 import Editor from "./components/editor/editor";
 import WebidNoteDropdown from "./components/browser/webid-note-dropdown";
+import { useContext, useEffect } from "react";
+import { ToastContext } from "./context-providers";
+import Spinner from "./components/spinner";
 
 enum Direction {
   Vertical, Horizontal,
@@ -10,9 +13,12 @@ enum Direction {
 
 
 export default function Page(){
-    const {session} = useSession()
-    const savedWebIds = [session.info.webId, 
-    ] 
+    const {session, sessionRequestInProgress} = useSession()
+    const {toast} = useContext(ToastContext)
+    useEffect (() => {if (sessionRequestInProgress) {
+      toast(<>Session Request in Progress <Spinner /></>)
+    }}, [sessionRequestInProgress])
+    const savedWebIds = [session.info.webId,] 
 
     return (<SlideableSeparator 
         leftSection={<div className="grid grid-cols-1 w-full border-b-2 md:border-none overflow-auto">
@@ -37,9 +43,7 @@ const SlideableSeparator = (props: {
         <div className={`bg-base overflow-y-auto ${props.direction === Direction.Vertical ? "resize-y" : "md:resize-x"}`}>
           {props.leftSection}
         </div>
-        <div
-            className="flex-none top-0 bottom-0 left-0 right-0 bg-gray-300 w-1"
-        />
+        <div className="border border-gray-200" />
         <div className="bg-base grow overflow-auto">
           {props.rightSection}
         </div>
