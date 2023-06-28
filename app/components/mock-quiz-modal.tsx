@@ -60,7 +60,7 @@ export default function MockQuizModal(props: {
       setQuizText(quizText)
       */
       // Debugging text to reduce openAI query
-      setQuizText(`My name is \n you are \n\nAnswers:\n yes\nno`) 
+      setQuizText(`Questions\nSample text to reduce openAI api key fees\n\nAnswers:\ntrue\n`) 
     }
     setLoading(false) // Remove loading dots in modal 
 
