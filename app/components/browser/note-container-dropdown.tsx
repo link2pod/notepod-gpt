@@ -13,6 +13,8 @@ import { FaEllipsisH } from "react-icons/fa"
 import { LDP, RDF } from "@inrupt/vocab-common-rdf"
 import { useSession } from "@inrupt/solid-ui-react"
 import NoteDatasetItem from "./note-dataset-item"
+import OptionsMenu from "./options-menu"
+import Dropdown from "./dropdown"
 
 export default function NoteContainerDropdown(props: {
     containerIri: string, 
@@ -43,57 +45,38 @@ export default function NoteContainerDropdown(props: {
         <div className="flex flex-col">
             <div className="flex justify-between hover:bg-gray-100 w-full rounded px-2 " >
                 <div className="flex overflow-clip">
-                    <BsChevronRight 
-                        className={`hover:fill-primary my-auto ${showChildren ? "rotate-90" : ""} `}
-                        onClick={handleOpenDropdown} 
-                    />
+                    <Dropdown.Button isOpen={showChildren} handleToggleDropdown={handleOpenDropdown}/>
                     <p className="text-clip sm:truncate">
                         {getContainerUrlPostfix(containerIri.substring(0,containerIri.length-1))}
                     </p>
                 </div>
-                <Popover>
-                    <Popover.Button className={"w-6 h-full "} as="div">
-                        <FaEllipsisH className="fill-black hover:fill-primary w-full h-full"/>
-                    </Popover.Button>
-                    <Popover.Panel 
-                        className="absolute grid grid-cols-1 -ml-24 -mt-28 border rounded border-gray-500 bg-gray-500"
-                    >
-                        <AddNoteButton 
-                            parentUrl={containerIri}
-                        />
-                        <AddFolderButton
-                            parentContainerUrl={containerIri}
-                        />
-                    </Popover.Panel>
-                </Popover>
+                <OptionsMenu>
+                    <AddNoteButton parentUrl={props.containerIri}/>
+                    <AddFolderButton parentContainerUrl={props.containerIri}/>
+                </OptionsMenu>
             </div>
-            <div className={`flex h-full ${showChildren ? "" : "hidden"}`}>
-                <div className="pl-4 h-full w-1 border-r-2 border-transparent hover:border-gray-200 "/>
-                <div className={`grid grid-cols-1 py-1 w-full`}>
-                    {loading ? <Spinner /> : <>
-                        {
-                            containerDataset && getIriAll(
-                                getThing(containerDataset, containerIri) as ThingPersisted, 
-                                LDP.contains,
-                            ).map ((noteThingIri) => {
-                                const noteThing = getThing(containerDataset, noteThingIri)
-                                if (!noteThing) {return null}
-                                if (getIriAll(noteThing, RDF.type).find((typeIri) => {
-                                    return typeIri === LDP.Container
-                                })){
-                                    return <NoteContainerDropdown 
-                                        containerIri={noteThingIri}
-                                        key={noteThingIri}
-                                    />
-                                }
-                                return <NoteDatasetItem 
-                                    noteDatasetUrl={noteThingIri} 
-                                    key={noteThingIri}/>
-                            })
+            <Dropdown.Body isOpen={showChildren} padding={4} showLinedrop>
+                {
+                    containerDataset && getIriAll(
+                        getThing(containerDataset, containerIri) as ThingPersisted, 
+                        LDP.contains,
+                    ).map ((noteThingIri) => {
+                        const noteThing = getThing(containerDataset, noteThingIri)
+                        if (!noteThing) {return null}
+                        if (getIriAll(noteThing, RDF.type).find((typeIri) => {
+                            return typeIri === LDP.Container
+                        })){
+                            return <NoteContainerDropdown 
+                                containerIri={noteThingIri}
+                                key={noteThingIri}
+                            />
                         }
-                    </> }
-                </div>
-            </div>
+                        return <NoteDatasetItem 
+                            noteDatasetUrl={noteThingIri} 
+                            key={noteThingIri}/>
+                    })
+                }
+            </Dropdown.Body>
         </div>
     )
 }

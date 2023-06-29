@@ -1,10 +1,10 @@
 "use client"
 
-import { SolidDataset, Thing, ThingPersisted, getIri, getIriAll, getSolidDataset, getSourceIri, getSourceUrl, getThing, getThingAll } from "@inrupt/solid-client"
+import { SolidDataset, Thing, ThingPersisted, createSolidDataset, getIri, getIriAll, getSolidDataset, getSourceIri, getSourceUrl, getThing, getThingAll, getUrl } from "@inrupt/solid-client"
 import {SOLID} from "@inrupt/vocab-solid"
 import { useState } from "react"
 import { BsChevronRight } from "react-icons/bs"
-import { getContainerUrlPostfix } from "../../lib/utilities"
+import { NoteDigitalDocument, getContainerUrlPostfix } from "../../lib/utilities"
 import Spinner from "../spinner"
 import { Popover } from "@headlessui/react"
 import AddFolderButton from "./add-folder-button"
@@ -14,106 +14,82 @@ import { LDP, RDF } from "@inrupt/vocab-common-rdf"
 import { useSession } from "@inrupt/solid-ui-react"
 import NoteDatasetItem from "./note-dataset-item"
 import NoteContainerDropdown from "./note-container-dropdown"
+import useSWR from 'swr'
+import OptionsMenu from "./options-menu"
+import Dropdown from "./dropdown"
 
 export default function TypeIndexDropdown(props: {
     typeIndexUrl: string,
     title?: string, 
 }){
-    const [loading, setLoading] = useState(false)
     const [showChildren, setShowChildren] = useState(false)
-    const [containerDataset, setContainerDataset] = useState(undefined as undefined | SolidDataset)
     const {session} = useSession()
-    return (
-        <div>
-            <p> {props.title} </p>
-            <p> {props.typeIndexUrl} </p>
-        </div>
-    )
-    /*
-            
-    getThingAll(privateTypeIndexDataset).filter((thing) => 
-                    getUrl(thing, SOLID.forClass) === NoteDigitalDocument
-                ).map((thing) => {
-                    const instanceContainerIri = getIri(thing, SOLID.instanceContainer)
-                    if (instanceContainerIri)
-                        return <NoteContainerDropdown 
-                            containerIri={instanceContainerIri}
-                        /> 
-                    else if (getUrl(thing, SOLID.instance)){
-                        return <>Note Item </>
-                    }
 
-    const handleOpenDropdown = async () => {
-        setShowChildren(!showChildren)
-        if (!showChildren){
-            setLoading(true)
-            try{
-                const noteContainerDataset = await getSolidDataset(
-                    containerIri,
-                    {fetch: session.fetch},
-                )
-                setContainerDataset(noteContainerDataset)
-            } catch(err){console.error(err)}
-            setLoading(false)
-        }
+    const {data: typeIndexDataset, isLoading, error} 
+        // (re)fetch data only when showChildren is true
+        = useSWR(showChildren ? props.typeIndexUrl : null, 
+            (url) => getSolidDataset(url, {fetch: session.fetch}) )
+
+    // Filter for all typeRegistrations that have a solid:forClass equal to Schema:NoteDigitalDocument
+    // I.e.: get all note registrations as a Thing<instanceContainer | instance>[]
+    const noteRegistrations 
+        = getThingAll(typeIndexDataset ? typeIndexDataset : createSolidDataset())
+        .filter((thing) => getUrl(thing, SOLID.forClass) === NoteDigitalDocument)
+    
+    const handleToggleDropdown = () => setShowChildren(!showChildren)
+
+    const handleAddFolder = () => {
+
     }
 
     return (
         <div className="flex flex-col">
-            <div className="flex justify-between hover:bg-gray-100 w-full rounded px-2 " >
+            <div className="flex justify-between hover:bg-gray-100 w-full px-2" >
                 <div className="flex overflow-clip">
-                    <BsChevronRight 
-                        className={`hover:fill-primary my-auto ${showChildren ? "rotate-90" : ""} `}
-                        onClick={handleOpenDropdown} 
-                    />
+                    <Dropdown.Button isOpen={showChildren} handleToggleDropdown={handleToggleDropdown}/>
                     <p className="text-clip sm:truncate">
-                        {getContainerUrlPostfix(containerIri.substring(0,containerIri.length-1))}
+                        {props.title ? props.title : props.typeIndexUrl}
                     </p>
                 </div>
-                <Popover>
-                    <Popover.Button className={"w-6 h-full "} as="div">
-                        <FaEllipsisH className="fill-black hover:fill-primary w-full h-full"/>
-                    </Popover.Button>
-                    <Popover.Panel 
-                        className="absolute grid grid-cols-1 -ml-24 -mt-28 border rounded border-gray-500 bg-gray-500"
-                    >
-                        <AddNoteButton 
-                            parentUrl={containerIri}
-                        />
-                        <AddFolderButton
-                            parentContainerUrl={containerIri}
-                        />
-                    </Popover.Panel>
-                </Popover>
+                <OptionsMenu>
+                    <button onClick={handleAddFolder}>Add Folder</button>
+                </OptionsMenu>
             </div>
-            <div className={`flex h-full ${showChildren ? "" : "hidden"}`}>
-                <div className="pl-4 h-full w-1 border-r-2 border-transparent hover:border-gray-200 "/>
-                <div className={`grid grid-cols-1 py-1 w-full`}>
-                    {loading ? <Spinner /> : <>
-                        {
-                            containerDataset && getIriAll(
-                                getThing(containerDataset, containerIri) as ThingPersisted, 
-                                LDP.contains,
-                            ).map ((noteThingIri) => {
-                                const noteThing = getThing(containerDataset, noteThingIri)
-                                if (!noteThing) {return null}
-                                if (getIriAll(noteThing, RDF.type).find((typeIri) => {
-                                    return typeIri === LDP.Container
-                                })){
-                                    return <NoteContainerDropdown 
-                                        containerIri={noteThingIri}
-                                        key={noteThingIri}
-                                    />
-                                }
-                                return <NoteDatasetItem 
-                                    noteDatasetUrl={noteThingIri} 
-                                    key={noteThingIri}/>
-                            })
+            <Dropdown.Body
+                isOpen={showChildren}
+                isLoading={isLoading}
+                error={error}
+                padding={4}
+            >
+                {   // map the noteRegistrations (Thing[] of instanceContainer and instance)
+                    // into array of JSX elements
+                    noteRegistrations.map((thing, id) => {
+                        const instanceContainerIri 
+                            = getIri(thing, SOLID.instanceContainer)
+                        const instanceIri 
+                            = getUrl(thing, SOLID.instance)
+
+                        // ReactChildren key
+                        const key = `${props.typeIndexUrl}-${id}`
+                        if (instanceContainerIri){ 
+                            // if instanceContainer, show containerdropdown
+                            return <NoteContainerDropdown 
+                                key={key}
+                                containerIri={instanceContainerIri}
+                            /> 
+                        } else if (instanceIri){
+                            // if instance, show dataset item
+                            return <NoteDatasetItem 
+                                key={key}
+                                noteDatasetUrl={instanceIri}
+                            /> 
+                        } else {
+                            // Unknown type, return empty element
+                            return <></>
                         }
-                    </> }
-                </div>
-            </div>
+                    })
+                }
+            </Dropdown.Body>
         </div>
     )
-    */
 }

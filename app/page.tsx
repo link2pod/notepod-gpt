@@ -21,7 +21,7 @@ export default function Page(){
     const savedWebIds = [session.info.webId,] 
 
     return (<SlideableSeparator 
-        leftSection={<div className="grid grid-cols-1 w-full border-b-2 md:border-none overflow-auto">
+        leftSection={<div className="grid grid-cols-1 w-full h-full border-b-2 md:border-none overflow-auto">
           {savedWebIds.map((webId) => {
             return webId ? 
               <div key={webId}><WebidNoteDropdown webId={webId}/></div>
