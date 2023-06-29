@@ -16,6 +16,32 @@ export async function POST(request: Request){
         })
     }
 
+    // example response for development purposes
+    if (!process.env.OPENAI_API_KEY){ 
+        return new Response(JSON.stringify({
+            "id": "chatcmpl-123",
+            "object": "chat.completion",
+            "created": 1677652288,
+            "choices": [{
+              "index": 0,
+              "message": {
+                "role": "assistant",
+                "content": `No API key was provided.  Here's a sample response:\n
+                Certainly!\nQuestions\nExample question 1\n\nAnswers:\nExample answer`,
+              },
+              "finish_reason": "stop"
+            }],
+            "usage": {
+              "prompt_tokens": 9,
+              "completion_tokens": 12,
+              "total_tokens": 21
+            }
+          }), {
+            status: 200, 
+        })
+    }
+
+    // fetch openAI's chat completion endpoint
     const res = await fetch("https://api.openai.com/v1/chat/completions", {
         method: "POST", 
         headers: {
@@ -31,7 +57,7 @@ export async function POST(request: Request){
                 }, 
                 {
                     "role": "user",
-                    "content": "Can you give me a mock quiz based on my notes?",
+                    "content": "Can you give me a mock quiz with answers based on my notes?",
                 }, 
                 {
                     "role": "assistant",
