@@ -42,7 +42,6 @@ export default function MockQuizModal(props: {
         .reduce((prev, curr) => prev.concat(curr))
       console.log(noteText, noteDataset, noteThings) //debug
         // generate mockquiz from the server-side api endpoint
-        /*
       const quiz = await fetch("/api/mockquiz", {
         method: "POST", 
         body: JSON.stringify({
@@ -58,9 +57,8 @@ export default function MockQuizModal(props: {
       const quizJson = await quiz.json()
       const quizText = quizJson.choices[0].message.content
       setQuizText(quizText)
-      */
       // Debugging text to reduce openAI query
-      setQuizText(`Questions\nSample text to reduce openAI api key fees\n\nAnswers:\ntrue\n`) 
+      //setQuizText(`Questions\nSample text to reduce openAI api key fees\n\nAnswers:\ntrue\n`) 
     }
     setLoading(false) // Remove loading dots in modal 
 
