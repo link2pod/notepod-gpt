@@ -57,7 +57,7 @@ export async function POST(request: Request){
                 }, 
                 {
                     "role": "user",
-                    "content": "Can you give me a mock quiz based on my notes?",
+                    "content": "Can you give me a mock quiz with answers based on my notes?",
                 }, 
                 {
                     "role": "assistant",
