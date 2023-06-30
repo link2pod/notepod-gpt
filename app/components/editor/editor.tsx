@@ -10,6 +10,7 @@ import _ from "lodash"
 import { BsFullscreen, BsShareFill } from "react-icons/bs"
 import ShareModal from "../share-modal"
 import { useSolidDatasetWithAcl } from "@/app/lib/hooks"
+import CircleSpinner from "../circle-spinner"
 
 export default function Editor(){
     const {selectedNoteUrl} = useContext(SelectedNoteContext)
@@ -22,11 +23,15 @@ export default function Editor(){
                 onSuccess(data, key, config) {
                     setDisplayedNoteDataset(data)
                 },
+                keepPreviousData: false,
             }}
         )
     
     const [displayedNoteDataset, setDisplayedNoteDataset] 
         = useState(noteDataset)
+
+    // Assume fetched note is more recent, so prefer useSWR's data
+    useEffect(() => setDisplayedNoteDataset(noteDataset), [noteDataset])
     
     const [showShareModal, setShowShareModal]  // Sharing note permissions modal
         = useState(false)
@@ -90,8 +95,19 @@ export default function Editor(){
     return (<div className="relative w-full h-full flex flex-col overflow-y-auto">
         {/**Toolbar at top*/}
         <div className="w-full justify-between flex sticky top-0 p-2 border-b-2 space-x-1">
-            <p className="text-gray-400 md:w-20">{savingStatus}</p>
-            <p className="text-primary truncate flex-initial">{selectedNoteUrl}</p>
+            {/**Saving status (or whatever it's set to)*/}
+                <p className="text-gray-400 md:w-20">
+                    {savingStatus}
+                </p>
+            <div className="flex space-between space-x-1">
+                {/**Title of note */}
+                <p className="text-primary truncate flex-initial">{selectedNoteUrl}</p>
+                {/**Circle Spinner if Revalidating data */}
+                {isValidating&& <CircleSpinner className="w-6 h-6"/>}
+            </div>
+            {/**Div on right of note-title. 
+             * Shows sharing icon, fullscreen icon
+            */}
             <div className="flex justify-evenly space-x-2">
                 {noteDataset && <BsShareFill className="hover:fill-primary hover:cursor-pointer" onClick={(e) => {
                     setShowShareModal(true)
@@ -101,7 +117,7 @@ export default function Editor(){
         </div>
         {/**Main editor */}
         <div className="w-full h-full overflow-y-auto">
-            {isLoading? <Spinner />: displayedNoteDataset && getThingAll(displayedNoteDataset).map((noteThing) => {
+            {(isLoading )? <Spinner />: displayedNoteDataset && getThingAll(displayedNoteDataset).map((noteThing) => {
                 const text = getStringNoLocale(noteThing, SCHEMA_INRUPT.text)
                 const url = noteThing.url
                 const noteName = url.substring(url.lastIndexOf("#")+1)

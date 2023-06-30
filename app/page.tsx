@@ -5,6 +5,7 @@ import Editor from "./components/editor/editor";
 import WebidNoteDropdown from "./components/browser/webid-note-dropdown";
 import { useContext, useEffect } from "react";
 import { RectangleSkeleton } from "./components/skeletons";
+import Spinner from "./components/spinner";
 
 enum Direction {
   Vertical, Horizontal,
@@ -21,7 +22,11 @@ export default function Page(){
     return (<SlideableSeparator 
         leftSection={<div className="grid grid-cols-1 w-full h-full border-b-2 md:border-none overflow-auto space-y-1">
           { // skeleton section if logging in. 
-          sessionRequestInProgress && <div className="w-full h-6"><RectangleSkeleton /> </div>}
+          sessionRequestInProgress && <div className="w-full h-6">
+            <RectangleSkeleton>
+              Loading User Profile <Spinner />
+            </RectangleSkeleton> 
+          </div>}
           { // display webIds as dropdowns
           savedWebIds.map((webId) => {
             return webId ? 

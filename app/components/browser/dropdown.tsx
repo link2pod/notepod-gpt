@@ -47,7 +47,9 @@ export function DropdownBody(props: {
         >
             <div className={`border-transparent hover:border-${(props.showLinedrop) ? "gray-200" : "transparent"} h-full w-1 border-r-2 `}/>
             <div className={`grid grid-cols-1 py-1 w-full`}>
-                {props.isLoading ? <Spinner /> 
+                { // if revalidating data (i.e. adding a new folder/note), show skeleton 
+                    props.isLoading ?  <div className="h-6 w-full"><RectangleSkeleton /></div>
+                //  otherwise if error display error
                 : props.error ? <div>{props.error}</div>
                 : <>{props.children} </> }
                 {

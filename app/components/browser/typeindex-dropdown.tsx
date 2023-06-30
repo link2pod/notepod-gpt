@@ -26,7 +26,7 @@ export default function TypeIndexDropdown(props: {
     const [showChildren, setShowChildren] = useState(false)
     const {session} = useSession()
 
-    const {data: typeIndexDataset, isLoading, error, mutate} 
+    const {data: typeIndexDataset, isLoading, error, mutate, isValidating} 
         // (re)fetch data only when showChildren is true
         = useSolidDataset(showChildren ? props.typeIndexUrl : null)
     
@@ -89,6 +89,7 @@ export default function TypeIndexDropdown(props: {
             <Dropdown.Body
                 isOpen={showChildren}
                 isLoading={isLoading}
+                isValidating={isValidating}
                 error={error}
                 padding
             >
