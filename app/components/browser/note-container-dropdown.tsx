@@ -1,6 +1,6 @@
 "use client"
 
-import { SolidDataset, Thing, ThingPersisted, getIri, getIriAll, getSolidDataset, getSourceIri, getSourceUrl, getThing, getThingAll } from "@inrupt/solid-client"
+import { SolidDataset, Thing, ThingPersisted, createContainerInContainer, getIri, getIriAll, getSolidDataset, getSourceIri, getSourceUrl, getThing, getThingAll } from "@inrupt/solid-client"
 import {SOLID} from "@inrupt/vocab-solid"
 import { useState } from "react"
 import { BsChevronRight } from "react-icons/bs"
@@ -15,30 +15,30 @@ import { useSession } from "@inrupt/solid-ui-react"
 import NoteDatasetItem from "./note-dataset-item"
 import OptionsMenu from "./options-menu"
 import Dropdown from "./dropdown"
+import useSWR from 'swr'
+import { RectangleSkeleton } from "../skeletons"
+import { useSolidDataset } from "@/app/lib/hooks"
 
 export default function NoteContainerDropdown(props: {
     containerIri: string, 
-    typeIndex?: SolidDataset,
+    typeIndexUrl?: string,
 }){
-    const [loading, setLoading] = useState(false)
-    const [showChildren, setShowChildren] = useState(false)
-    const [containerDataset, setContainerDataset] = useState(undefined as undefined | SolidDataset)
-    const {session} = useSession()
     const containerIri = props.containerIri
+    const [showChildren, setShowChildren] = useState(false)
+    const {session} = useSession()
+    const {data: containerDataset, isLoading, mutate, error, isValidating} 
+        = useSolidDataset(containerIri)
 
-    const handleOpenDropdown = async () => {
-        setShowChildren(!showChildren)
-        if (!showChildren){
-            setLoading(true)
-            try{
-                const noteContainerDataset = await getSolidDataset(
-                    containerIri,
-                    {fetch: session.fetch},
-                )
-                setContainerDataset(noteContainerDataset)
-            } catch(err){console.error(err)}
-            setLoading(false)
-        }
+    const handleOpenDropdown = () => setShowChildren(!showChildren) 
+
+    const handleAddFolder = async () => {
+        // createContainer at props.storageUrl
+        await createContainerInContainer(containerIri, {
+            slugSuggestion: "new-container", 
+            fetch: session.fetch, 
+        })
+        // update useSWR cache
+        mutate()
     }
 
     return (
@@ -52,10 +52,12 @@ export default function NoteContainerDropdown(props: {
                 </div>
                 <OptionsMenu>
                     <AddNoteButton parentUrl={props.containerIri}/>
-                    <AddFolderButton parentContainerUrl={props.containerIri}/>
+                    <button onClick={handleAddFolder}>Add Folder</button>
                 </OptionsMenu>
             </div>
-            <Dropdown.Body isOpen={showChildren} padding={4} showLinedrop>
+            <Dropdown.Body 
+                isOpen={showChildren} showLinedrop padding
+                isLoading={isLoading} isValidating={isValidating}>
                 {
                     containerDataset && getIriAll(
                         getThing(containerDataset, containerIri) as ThingPersisted, 

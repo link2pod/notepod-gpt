@@ -19,7 +19,8 @@ export default function OptionsMenu(props: {
                 <FaEllipsisH className="fill-black hover:fill-primary w-full h-full"/>
             </Popover.Button>
             <Popover.Panel 
-                className="absolute flex flex-col right-0 top-0 mt-4 w-40 border rounded border-gray-500 bg-gray-500"
+                className="z-10 absolute flex flex-col right-0 top-0 mt-4 w-40 
+                    border rounded border-gray-500 bg-gray-500"
                 as="div"
             >
             {/** Extended options menu.  */}

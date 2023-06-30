@@ -8,3 +8,4 @@ export default function Spinner(){
     <div className="spinner-dot"></div>
   </div>)
 }
+

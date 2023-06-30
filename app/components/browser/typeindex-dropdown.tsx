@@ -1,6 +1,6 @@
 "use client"
 
-import { SolidDataset, Thing, ThingPersisted, createSolidDataset, getIri, getIriAll, getSolidDataset, getSourceIri, getSourceUrl, getThing, getThingAll, getUrl } from "@inrupt/solid-client"
+import { SolidDataset, Thing, ThingPersisted, buildThing, createContainerInContainer, createSolidDataset, createThing, getIri, getIriAll, getSolidDataset, getSourceIri, getSourceUrl, getThing, getThingAll, getUrl, saveSolidDatasetAt, setThing } from "@inrupt/solid-client"
 import {SOLID} from "@inrupt/vocab-solid"
 import { useState } from "react"
 import { BsChevronRight } from "react-icons/bs"
@@ -17,19 +17,20 @@ import NoteContainerDropdown from "./note-container-dropdown"
 import useSWR from 'swr'
 import OptionsMenu from "./options-menu"
 import Dropdown from "./dropdown"
+import { useSolidDataset } from "@/app/lib/hooks"
 
 export default function TypeIndexDropdown(props: {
     typeIndexUrl: string,
+    storageUrl: string | undefined, 
     title?: string, 
 }){
     const [showChildren, setShowChildren] = useState(false)
     const {session} = useSession()
 
-    const {data: typeIndexDataset, isLoading, error} 
+    const {data: typeIndexDataset, isLoading, error, mutate} 
         // (re)fetch data only when showChildren is true
-        = useSWR(showChildren ? props.typeIndexUrl : null, 
-            (url) => getSolidDataset(url, {fetch: session.fetch}) )
-
+        = useSolidDataset(showChildren ? props.typeIndexUrl : null)
+    
     // Filter for all typeRegistrations that have a solid:forClass equal to Schema:NoteDigitalDocument
     // I.e.: get all note registrations as a Thing<instanceContainer | instance>[]
     const noteRegistrations 
@@ -38,8 +39,35 @@ export default function TypeIndexDropdown(props: {
     
     const handleToggleDropdown = () => setShowChildren(!showChildren)
 
-    const handleAddFolder = () => {
+    const handleAddFolder = async () => {
+        if (!typeIndexDataset ) {
+            // Show toast that typeIndex is unavailable (likely some error fetching it) 
+            console.error("Type index dataset not found")
+            return
+        }
+        if (!props.storageUrl) {
+            console.error("StorageUrl not yet found. Please try again.")
+            return
+        }
+        // createContainer at props.storageUrl
+        // TODO: refactor into useSWR hook
+        const res = await createContainerInContainer(props.storageUrl, {
+            slugSuggestion: "new-container", 
+            fetch: session.fetch,
+        })
 
+        // create instanceContainer thing linking to newly created container
+        const noteRegisterThing = buildThing(createThing())
+        .addIri(SOLID.forClass, NoteDigitalDocument)
+        .addIri(RDF.type, SOLID.TypeRegistration)
+        .addIri(SOLID.instanceContainer, getSourceIri(res))
+        .build()
+
+        // add the instanceContainer thing to the index
+        const newTypeIndexDataset = setThing(typeIndexDataset, noteRegisterThing) 
+        
+        // Save to server and update useSWR cache
+        mutate(async () => await saveSolidDatasetAt(props.typeIndexUrl, newTypeIndexDataset, {fetch:session.fetch}))
     }
 
     return (
@@ -52,7 +80,11 @@ export default function TypeIndexDropdown(props: {
                     </p>
                 </div>
                 <OptionsMenu>
-                    <button onClick={handleAddFolder}>Add Folder</button>
+                    {/** Add folder button. Disabled if rootStorage hasn't been retrieved yet */}
+                    <button     
+                        onClick={handleAddFolder} 
+                        disabled={!props.storageUrl}
+                    >Add Folder</button>
                 </OptionsMenu>
             </div>
             <Dropdown.Body

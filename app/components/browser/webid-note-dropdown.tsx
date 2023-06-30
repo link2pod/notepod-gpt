@@ -25,7 +25,6 @@ export default function WebidNoteDropdown(props: {
     // Fetch profileAll of props.webId
     const {data: profileAll, isLoading, error}  
         = useSWR(showChildren ? props.webId : null, (webId) => {
-            console.log("From profileAll fetcher", session.info)
             return getProfileAll( webId, {fetch: session.fetch}
         )}, {
             revalidateIfStale: false, 
@@ -33,12 +32,23 @@ export default function WebidNoteDropdown(props: {
         })
     
     // After profileAll is fetched, get the private and public TypeIndexDatasets
-    const [privateTypeIndexUrl, publicTypeIndexUrl] 
+    const [privateTypeIndexUrl, publicTypeIndexUrl ] 
         = profileAll 
             ? [
                 getTypeIndexUrl(profileAll, props.webId, SOLID.privateTypeIndex),
                 getTypeIndexUrl(profileAll, props.webId, SOLID.publicTypeIndex),
             ] : [undefined, undefined]
+    
+    // get the rootStorages from the profileAll (null if profileAll is null) 
+    const rootStorages = profileAll ? getPodUrlAllFrom(profileAll, props.webId) : null 
+
+    //  If rootStorages is empty array, then get rootStorage manually
+    const {data: rootPod} = useSWR(
+        // caching key
+        (rootStorages && rootStorages.length === 0) ? 'rootStorage' : null, 
+        (_) => getRootContainer(props.webId), 
+        {revalidateIfStale: false, revalidateOnFocus: false}
+    ) 
 
     const handleOpenDropdown = async () => {
         setShowChildren(!showChildren)
@@ -67,10 +77,12 @@ export default function WebidNoteDropdown(props: {
         >
             {privateTypeIndexUrl  && <TypeIndexDropdown 
                 typeIndexUrl={privateTypeIndexUrl}
+                storageUrl={rootPod}
                 title="Private Notes"
             />}
             {publicTypeIndexUrl  && <TypeIndexDropdown 
                 typeIndexUrl={publicTypeIndexUrl}
+                storageUrl={rootPod}
                 title="Public Notes"
             />}
             {/**TODO: Display dropdown for root storage and other PIM:storages */}

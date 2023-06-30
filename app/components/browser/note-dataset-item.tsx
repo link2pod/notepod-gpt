@@ -15,7 +15,7 @@ export default function NoteDatasetItem(props: {
     if (!setSelectedNoteUrl) throw new Error("Selected Note Context Required")
 
     return (<div 
-        className="flex justify-between hover:bg-gray-200 w-full px-2"
+        className="flex justify-between hover:bg-gray-200 w-full px-2 cursor-pointer"
         onClick={() => setSelectedNoteUrl(props.noteDatasetUrl)}
     >
         <div className="overflow-clip truncate">

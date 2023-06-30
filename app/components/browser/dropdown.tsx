@@ -1,8 +1,7 @@
-"use client"
-
 import { BsChevronRight } from "react-icons/bs"
 import Spinner from "../spinner"
-import { ReactNode, useState } from "react"
+import { ReactNode } from "react"
+import { RectangleSkeleton } from "../skeletons"
 
 
 type anyfn = (..._:any[]) => any
@@ -17,16 +16,17 @@ export function DropdownButton(props: {
     handleToggleDropdown: anyfn,
 }){
     return (<BsChevronRight
-        className={`hover:fill-primary my-auto ${props.isOpen ? "rotate-90" : ""} fill-gray-500`}
+        className={`hover:fill-primary cursor-pointer my-auto ${props.isOpen ? "rotate-90" : ""} fill-gray-500`}
         onClick={props.handleToggleDropdown} 
     />)
 }
 
 /**
  * @param props props
- * @param props.padding number representing tailwindcss padding class number (i.e. 0,1,4,...)
+ * @param props.padding number representing left padding in pixels
  * @param props.showLinedrop display indentation line on left when hovered
  * @param props.isLoading shows loading spinner when true 
+ * @param props.isValidating shows skeleton rectangle when true (i.e. new folder/note is created)
  * @returns styled JSX component that's hidden. 
  * Content is shown when props.isOpen is true. 
  * If not loading, shows error if props.error is defined 
@@ -39,19 +39,21 @@ export function DropdownBody(props: {
     error?: any,
     padding?: number,
     showLinedrop?: boolean,
+    isValidating?: boolean, 
 }) {
-    const [hovering, setHovering] = useState(false)
     return (
         <div 
-            className={`flex h-full ${props.isOpen? "" : "hidden"} pl-${props.padding ? props.padding : 0}`}
-            onMouseEnter={() => setHovering(true)}
-            onMouseLeave={() => setHovering(false)}
+            className={`flex h-full${props.isOpen? "" : " hidden"} ${props.padding ? "pl-4": ""}`}
         >
-            <div className={`border-${(props.showLinedrop && hovering) ? "gray-200" : "transparent"} h-full w-1 border-r-2 `}/>
+            <div className={`border-transparent hover:border-${(props.showLinedrop) ? "gray-200" : "transparent"} h-full w-1 border-r-2 `}/>
             <div className={`grid grid-cols-1 py-1 w-full`}>
                 {props.isLoading ? <Spinner /> 
                 : props.error ? <div>{props.error}</div>
                 : <>{props.children} </> }
+                {
+                    // if revalidating data (i.e. adding a new folder/note), show spinner
+                    props.isValidating && <div className="h-6 w-full"><RectangleSkeleton /></div>
+                }
             </div>
         </div>
     )
