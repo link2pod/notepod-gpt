@@ -16,13 +16,16 @@ import { getDefaultSession } from '@inrupt/solid-client-authn-browser'
  * @link https://swr.vercel.app 
  * @returns equivalent to calling `useSWR(key, () => getSolidDatasetWithAcl(key))`
  */
-export function useSolidDatasetWithAcl(key: string|null, options: {
-    swrConfig: Parameters<typeof useSWR<SolidDatasetWithAcl>>[2] 
-    inruptConfig: Parameters<typeof getSolidDatasetWithAcl>[1] 
-} = {swrConfig: {}, inruptConfig: {fetch: getDefaultSession().fetch}} ){
+export function useSolidDatasetWithAcl(key: string|null, options?: {
+    swrConfig?: Parameters<typeof useSWR<SolidDatasetWithAcl>>[2] 
+    inruptConfig?: Parameters<typeof getSolidDatasetWithAcl>[1] 
+}){
     const swrConfig = options ? options.swrConfig : {}
+    const inruptConfig = options ? options.inruptConfig: {
+        fetch: getDefaultSession().fetch,
+    }
     return useSWR(
-        key, (key) => getSolidDatasetWithAcl(key, options.inruptConfig),
+        key, (key) => getSolidDatasetWithAcl(key, inruptConfig),
         swrConfig)
 }
 
@@ -42,13 +45,16 @@ type useSWRGetDatasetParams
  * @link https://swr.vercel.app 
  * @returns equivalent to calling `useSWR(key, () => getSolidDataset(key))`
  */
-export function useSolidDataset(key: string|null, options: {
-    swrConfig: useSWRGetDatasetParams[2] 
-    inruptConfig: Parameters<typeof getSolidDataset>[1] 
-} = {swrConfig: {}, inruptConfig: {fetch: getDefaultSession().fetch}} ){
+export function useSolidDataset(key: string|null, options?: {
+    swrConfig?: useSWRGetDatasetParams[2] 
+    inruptConfig?: Parameters<typeof getSolidDataset>[1] 
+}){
     const swrConfig = options ? options.swrConfig : {}
+    const inruptConfig = options ? options.inruptConfig: {
+        fetch: getDefaultSession().fetch,
+    }
     return useSWR(
-        key, (key) => getSolidDataset(key, options.inruptConfig),
+        key, (key) => getSolidDataset(key, inruptConfig),
         swrConfig)
 }
 

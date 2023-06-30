@@ -23,7 +23,7 @@ export function DropdownButton(props: {
 
 /**
  * @param props props
- * @param props.padding number representing left padding in pixels
+ * @param props.padding show left padding 
  * @param props.showLinedrop display indentation line on left when hovered
  * @param props.isLoading shows loading spinner when true 
  * @param props.isValidating shows skeleton rectangle when true (i.e. new folder/note is created)
@@ -37,7 +37,7 @@ export function DropdownBody(props: {
     children: ReactNode
     isLoading?: boolean, 
     error?: any,
-    padding?: number,
+    padding?: boolean,
     showLinedrop?: boolean,
     isValidating?: boolean, 
 }) {

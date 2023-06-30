@@ -91,7 +91,7 @@ export default function TypeIndexDropdown(props: {
                 isOpen={showChildren}
                 isLoading={isLoading}
                 error={error}
-                padding={4}
+                padding
             >
                 {   // map the noteRegistrations (Thing[] of instanceContainer and instance)
                     // into array of JSX elements
