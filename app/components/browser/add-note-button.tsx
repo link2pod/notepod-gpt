@@ -7,7 +7,6 @@ import { getAccessFor } from "@inrupt/solid-client/dist/access/universal"
 import { useSession } from "@inrupt/solid-ui-react"
 import { RDF, SCHEMA_INRUPT } from "@inrupt/vocab-common-rdf"
 import { useState } from "react"
-import useSWR from 'swr'
 
 export default function AddNoteButton(props: {
     parentUrl: string, 

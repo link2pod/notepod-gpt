@@ -9,7 +9,6 @@ import {FaEllipsisH} from "react-icons/fa"
 import Spinner from "../spinner";
 import { SOLID } from "@inrupt/vocab-solid"
 import NoteContainerDropdown from "./note-container-dropdown"
-import AddFolderButton from "./add-folder-button";
 import { GetProfileAll, NoteDigitalDocument, getRootContainer, getTypeIndexUrl } from "../../lib/utilities";
 import useSWR from 'swr'
 import { getDefaultSession } from "@inrupt/solid-client-authn-browser";
