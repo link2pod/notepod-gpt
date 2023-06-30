@@ -29,7 +29,9 @@ export default function TypeIndexDropdown(props: {
 
     const {data: typeIndexDataset, isLoading, error, mutate} 
         // (re)fetch data only when showChildren is true
-        = useSolidDataset(showChildren ? props.typeIndexUrl : null)
+        = useSolidDataset(showChildren ? props.typeIndexUrl : null,
+            {inruptConfig:{fetch: session.fetch}},
+        )
     
     // Filter for all typeRegistrations that have a solid:forClass equal to Schema:NoteDigitalDocument
     // I.e.: get all note registrations as a Thing<instanceContainer | instance>[]

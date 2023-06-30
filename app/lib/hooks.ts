@@ -11,7 +11,7 @@ import { getDefaultSession } from '@inrupt/solid-client-authn-browser'
  * @param options.swrConfig config for useSWR (third parameter of useSWR). 
  * Default value is `{}` (i.e. empty object)
  * @param options.inruptConfig options for getSolidDatasetWithAcl (second parameter). 
- * Default value is `{fetch: getDefaultSession().fetch}` 
+ * By default, fetcher will use getDefaultSession()
  * (i.e. currently authenticated session's fetch function)
  * @link https://swr.vercel.app 
  * @returns equivalent to calling `useSWR(key, () => getSolidDatasetWithAcl(key))`
@@ -20,12 +20,16 @@ export function useSolidDatasetWithAcl(key: string|null, options?: {
     swrConfig?: Parameters<typeof useSWR<SolidDatasetWithAcl>>[2] 
     inruptConfig?: Parameters<typeof getSolidDatasetWithAcl>[1] 
 }){
-    const swrConfig = options ? options.swrConfig : {}
-    const inruptConfig = options ? options.inruptConfig: {
+    const swrConfig = (options &&options.swrConfig) ? options.swrConfig : {}
+    const inruptConfig = (options &&options.inruptConfig) ? options.inruptConfig: {
         fetch: getDefaultSession().fetch,
     }
+    //console.log(options, inruptConfig)
     return useSWR(
-        key, (key) => getSolidDatasetWithAcl(key, inruptConfig),
+        key, (key) => {
+            //console.log("inside withacl fetcher",key, inruptConfig)
+            return getSolidDatasetWithAcl(key, inruptConfig)
+        },
         swrConfig)
 }
 
@@ -40,7 +44,7 @@ type useSWRGetDatasetParams
  * @param options.swrConfig config for useSWR (third parameter of useSWR). 
  * Default value is `{}` (i.e. empty object)
  * @param options.inruptConfig options for getSolidDataset (second parameter). 
- * Default value is `{fetch: getDefaultSession().fetch}` 
+ * By default, fetcher will use getDefaultSession()
  * (i.e. currently authenticated session's fetch function)
  * @link https://swr.vercel.app 
  * @returns equivalent to calling `useSWR(key, () => getSolidDataset(key))`
@@ -49,12 +53,16 @@ export function useSolidDataset(key: string|null, options?: {
     swrConfig?: useSWRGetDatasetParams[2] 
     inruptConfig?: Parameters<typeof getSolidDataset>[1] 
 }){
-    const swrConfig = options ? options.swrConfig : {}
-    const inruptConfig = options ? options.inruptConfig: {
+    const swrConfig = (options &&options.swrConfig) ? options.swrConfig : {}
+    const inruptConfig = (options &&options.inruptConfig) ? options.inruptConfig: {
         fetch: getDefaultSession().fetch,
     }
+    //console.log(options, inruptConfig)
     return useSWR(
-        key, (key) => getSolidDataset(key, inruptConfig),
+        key, (key) => {
+            //console.log("inside fetcher",key, inruptConfig)
+            return getSolidDataset(key, inruptConfig)
+        },
         swrConfig)
 }
 

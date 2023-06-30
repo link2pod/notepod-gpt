@@ -15,8 +15,8 @@ export default function RootLayout(props: {
   children: React.ReactNode,
 }) {
   return (
-    <html lang="en">
-      <SessionProvider>
+    <SessionProvider>
+      <html lang="en">
       <ToastContextProvider>
         <body className='flex flex-col h-screen max-h-screen'>
           <div className='fixed z-[100] overflow-clip right-0 top-0'>
@@ -32,7 +32,7 @@ export default function RootLayout(props: {
           </SelectedNoteContextProvider>
         </body>
       </ToastContextProvider>
-      </SessionProvider>
-    </html>
+      </html>
+    </SessionProvider>
   )
 }

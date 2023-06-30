@@ -17,12 +17,23 @@ export default function Editor(){
     const [savingStatus, setSavingStatus] = useState("")
     
     const {data: noteDataset, isLoading, error, mutate, isValidating} 
-        = useSolidDatasetWithAcl(selectedNoteUrl ? selectedNoteUrl : null,)
+        = useSolidDatasetWithAcl(selectedNoteUrl ? selectedNoteUrl : null,
+            {swrConfig: {
+                onSuccess(data, key, config) {
+                    setDisplayedNoteDataset(data)
+                },
+            }}
+        )
+    
+    const [displayedNoteDataset, setDisplayedNoteDataset] 
+        = useState(noteDataset)
     
     const [showShareModal, setShowShareModal]  // Sharing note permissions modal
         = useState(false)
     
     const {toast} = useContext(ToastContext) // show toasts
+    
+    // Create debounced saving function
     const debouncedSaveNoteDataset = useCallback(
         _.debounce(async (noteDataset: SolidDataset) => {
             if (selectedNoteUrl) {
@@ -42,20 +53,21 @@ export default function Editor(){
     , [selectedNoteUrl])
 
     const handleInputChange = (text: string, noteThing: ThingPersisted) => {
-        if (!noteDataset){
+        if (!displayedNoteDataset){
             // This shouldn't occur, but handle it just in case
             toast("Error loading note. Try refreshing the page.")
+            console.error("No dataset")
             return
         }
         // Check if note is publically editable
-        const publicAccess = getPublicAccess(noteDataset)
+        const publicAccess = getPublicAccess(displayedNoteDataset)
         if (!publicAccess || !publicAccess.write){
             // No public access, so check private access
             const webId = session.info.webId 
             if (!webId){ // Not logged in 
                 // Show toast for not logged in
             } else {
-                const access = getAgentAccess(noteDataset, webId)
+                const access = getAgentAccess(displayedNoteDataset, webId)
                 if (!access || !access.write){
                     toast(<>Warning: no private access</>)
                     // no private access, check group access TODO 
@@ -65,8 +77,9 @@ export default function Editor(){
 
         const newNoteThing = setStringNoLocale(
             noteThing, SCHEMA_INRUPT.text, text)
-        const newNoteDataset = setThing(noteDataset, newNoteThing)
+        const newNoteDataset = setThing(displayedNoteDataset, newNoteThing)
         setSavingStatus("saving")
+        setDisplayedNoteDataset(newNoteDataset)
         debouncedSaveNoteDataset(newNoteDataset)
     }
 
@@ -88,7 +101,7 @@ export default function Editor(){
         </div>
         {/**Main editor */}
         <div className="w-full h-full overflow-y-auto">
-            {isLoading? <Spinner />: noteDataset && getThingAll(noteDataset).map((noteThing) => {
+            {isLoading? <Spinner />: displayedNoteDataset && getThingAll(displayedNoteDataset).map((noteThing) => {
                 const text = getStringNoLocale(noteThing, SCHEMA_INRUPT.text)
                 const url = noteThing.url
                 const noteName = url.substring(url.lastIndexOf("#")+1)
