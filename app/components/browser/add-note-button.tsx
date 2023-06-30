@@ -15,8 +15,7 @@ export default function AddNoteButton(props: {
     const {session} = useSession()
     // manage data from parentContainerDataset
     const {data: parentDataset, mutate} = useSolidDatasetWithAcl(
-        props.parentUrl,
-        {inruptConfig:{fetch: session.fetch}},
+        props.parentUrl
     )
 
     const handleAdd = async () => {

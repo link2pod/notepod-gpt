@@ -28,9 +28,7 @@ export default function NoteContainerDropdown(props: {
     
     // Fetch dataset representing the container (and it's contents)
     const {data: containerDataset, isLoading, mutate, error, isValidating} 
-        = useSolidDataset(containerIri, 
-            {inruptConfig:{fetch: session.fetch, }},
-        )
+        = useSolidDataset(containerIri)
 
     const handleOpenDropdown = () => setShowChildren(!showChildren) 
 
