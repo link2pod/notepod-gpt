@@ -6,7 +6,7 @@ import { SolidDataset, getSolidDataset, getStringNoLocale, getThingAll } from "@
 import { SCHEMA_INRUPT } from "@inrupt/vocab-common-rdf"
 import { useContext, useEffect, useState } from "react"
 import BaseModal from "./base-modal";
-import useSWR  from 'swr'
+import useSWR from 'swr'
 import { useSolidDatasetWithAcl } from "../lib/hooks"
 import { SolidDatasetWithAcl } from "../lib/utilities"
 
@@ -16,22 +16,22 @@ import { SolidDatasetWithAcl } from "../lib/utilities"
 //   - Use the concated string to query OpenAI Chat completions endpoint to generate mock quiz
 //   - Display OpenAI's data in the modal 
 export default function MockQuizModal(props: {
-  isOpen: boolean, 
-  setIsOpen: (e: boolean) => any, 
-}){
-  const {selectedNoteUrl}  // Currently selected note's url
-    = useContext(SelectedNoteContext) 
-  
+  isOpen: boolean,
+  setIsOpen: (e: boolean) => any,
+}) {
+  const { selectedNoteUrl }  // Currently selected note's url
+    = useContext(SelectedNoteContext)
+
   // get note dataset (should be from cache)
-  const {data: noteDataset, isLoading: loadingNoteData} 
+  const { data: noteDataset, isLoading: loadingNoteData }
     = useSWR<SolidDatasetWithAcl>(selectedNoteUrl ? selectedNoteUrl : null)
 
   // Function that calls /api/mockquiz endpoint with required data
   const getMockQuiz = async () => {
     if (selectedNoteUrl && noteDataset) {
       // get all Notedigitaldocument things
-      const noteThings = getThingAll(noteDataset) 
-      
+      const noteThings = getThingAll(noteDataset)
+
       // concat all note text from things int eh dataset
       const noteText = noteThings
         .map((noteThing) => {
@@ -41,9 +41,9 @@ export default function MockQuizModal(props: {
         })
         .reduce((prev, curr) => prev.concat(curr))
       console.log(selectedNoteUrl, noteText, noteDataset, noteThings) //debug
-        // generate mockquiz from the server-side api endpoint
+      // generate mockquiz from the server-side api endpoint
       const quiz = await fetch("/api/mockquiz", {
-        method: "POST", 
+        method: "POST",
         body: JSON.stringify({
           noteText // pass in the concatenated note text
         })
@@ -63,13 +63,13 @@ export default function MockQuizModal(props: {
   }
 
   // Send noteData to openAI api only if the modal is open and notedata exists
-  const {data: quizText, isLoading: loadingQuiz, mutate, isValidating} = useSWR(
+  const { data: quizText, isLoading: loadingQuiz, mutate, isValidating } = useSWR(
     // Use "/api/mockquiz/$url" as cache key so that each noteurl has cached quiz
-    (props.isOpen && noteDataset) ? `/api/mockquiz/${selectedNoteUrl}` : null, 
+    (props.isOpen && noteDataset) ? `/api/mockquiz/${selectedNoteUrl}` : null,
     getMockQuiz,
     {
       // Prevent revalidations on fetching mockquiz data since api is expensive
-      revalidateOnMount: false, 
+      revalidateOnMount: false,
       revalidateIfStale: false,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
@@ -85,13 +85,17 @@ export default function MockQuizModal(props: {
     {...props}
     title="Mock Quiz"
   >
-    {/**Quiz contents */}
-    {(loading || isValidating) ? <Spinner />  : (!selectedNoteUrl) ? "No note selected"
-      : quizText && <div className="w-full p-1">{<QuizDisplay text={quizText}/>}</div>
-    }
-    
-    {/**Button to regenerate mock quiz */}
-    <button onClick={()=>mutate()}>Regenerate Quiz</button>
+    <div className="container w-full h-full max-h-full p-1">
+      {/**Quiz contents */}
+      {(loading || isValidating) ? <Spinner /> : (!selectedNoteUrl) ? "No note selected"
+        : quizText && <QuizDisplay text={quizText} />
+      }
+
+      {/**Button to regenerate mock quiz */}
+    </div>
+    <div className="absolute bottom-0 mb-2 right-0 mr-2">
+      <button onClick={() => mutate()}>Regenerate Quiz</button>
+    </div>
   </BaseModal>)
 }
 
@@ -104,11 +108,11 @@ export default function MockQuizModal(props: {
  * Blank lines will be mapped to an <hr /> element.
  */
 
-function QuizDisplay(props: {text: string}){
+function QuizDisplay(props: { text: string }) {
   return (<>
-    {props.text.split('\n').map((s,id) => 
-      s === "" ? 
-        <hr className="border border-gray-200" key={`mqst${id}`}/> 
+    {props.text.split('\n').map((s, id) =>
+      s === "" ?
+        <hr className="border border-gray-200" key={`mqst${id}`} />
         : <p key={`mqst${id}`}>{s}</p>)}
   </>)
 }

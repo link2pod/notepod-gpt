@@ -27,7 +27,7 @@ export default function BaseModal (props: {
         {/* Full-screen container to center the panel */}
         <div className="fixed inset-0 flex items-center justify-center p-4">
         {/* The actual dialog panel  */}
-        <Dialog.Panel className="flex flex-col w-2/3 h-2/3 rounded bg-white">
+        <Dialog.Panel className="flex flex-col w-2/3 h-2/3 max-h-2/3 rounded bg-white relative">
             {/** Dialog title */}
             <Dialog.Title className="relative w-full pb-1 mt-4 font-bold text-3xl" as='div'>
                 <div className='flex justify-center w-full'>
@@ -39,7 +39,7 @@ export default function BaseModal (props: {
                 ><IoIosCloseCircleOutline className='fill-gray-500 hover:fill-primary'/></div>
             </Dialog.Title>
             <hr className="border border-gray-300 w-full rounded mt-1" />
-            <div className='flex-grow w-full'> {props.children} </div>
+            <div className='w-full overflow-auto'> {props.children} </div>
         </Dialog.Panel>
         </div>
     </Dialog>)
