@@ -4,7 +4,7 @@ import Spinner from "@/app/components/spinner"
 import { SelectedNoteContext } from "@/app/context-providers"
 import { SolidDataset, getSolidDataset, getStringNoLocale, getThingAll } from "@inrupt/solid-client"
 import { SCHEMA_INRUPT } from "@inrupt/vocab-common-rdf"
-import { useContext, useEffect, useState } from "react"
+import { ReactNode, useContext, useEffect, useState } from "react"
 import BaseModal from "./base-modal";
 import useSWR from 'swr'
 import { useSolidDatasetWithAcl } from "../lib/hooks"
@@ -85,7 +85,7 @@ export default function MockQuizModal(props: {
     {...props}
     title="Mock Quiz"
   >
-    <div className="container w-full h-full max-h-full p-1">
+    <div className="container w-full h-full max-h-full p-1 pb-20">
       {/**Quiz contents */}
       {(loading || isValidating) ? <Spinner /> : (!selectedNoteUrl) ? "No note selected"
         : quizText && <QuizDisplay text={quizText} />
@@ -109,10 +109,36 @@ export default function MockQuizModal(props: {
  */
 
 function QuizDisplay(props: { text: string }) {
+
   return (<>
-    {props.text.split('\n').map((s, id) =>
-      s === "" ?
-        <hr className="border border-gray-200" key={`mqst${id}`} />
-        : <p key={`mqst${id}`}>{s}</p>)}
+    {props.text.split('\n').map((s, id, array) => {
+      const ishidden = id > 0 && array[id - 1].toLowerCase().includes("answer")
+      const key = `mqst${id}`
+      if (s === "") {
+        return <hr className="border border-gray-200" key={key} />
+      } else if (ishidden) {
+        return (
+          <Revealable visible={false} key={key} >
+            <p>{s}</p>
+          </Revealable>
+        )
+      } else {
+        return <p key={key}>{s}</p>
+      }
+    })}
   </>)
+}
+
+function Revealable(props: {
+  children: ReactNode,
+  visible?: boolean,
+}) {
+  const [visible, setVisible] = useState(props.visible)
+  return (
+    <div className={`${visible ? "bg-transparent" : "bg-neutral"} cursor-pointer`}
+      onClick={() => setVisible(!visible)}
+    >
+      {props.children}
+    </div>
+  )
 }
