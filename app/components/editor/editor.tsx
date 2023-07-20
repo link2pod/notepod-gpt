@@ -21,6 +21,7 @@ export default function Editor(){
         = useSolidDatasetWithAcl(selectedNoteUrl ? selectedNoteUrl : null,
             {swrConfig: {
                 onSuccess(data, key, config) {
+                    // Assume fetched note is more recent, so prefer useSWR's data
                     setDisplayedNoteDataset(data)
                 },
                 keepPreviousData: false,
@@ -29,9 +30,6 @@ export default function Editor(){
     
     const [displayedNoteDataset, setDisplayedNoteDataset] 
         = useState(noteDataset)
-
-    // Assume fetched note is more recent, so prefer useSWR's data
-    useEffect(() => setDisplayedNoteDataset(noteDataset), [noteDataset])
     
     const [showShareModal, setShowShareModal]  // Sharing note permissions modal
         = useState(false)

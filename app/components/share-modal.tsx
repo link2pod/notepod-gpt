@@ -15,6 +15,7 @@ export default function ShareModal (props: {
     isOpen: boolean, 
     setIsOpen: Dispatch<SetStateAction<boolean>>,
 }) {
+    console.log(props.dataset)
     const [inputWebId, setInputWebId] = useState("")
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {

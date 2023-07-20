@@ -1,9 +1,8 @@
 "use client"
 
 import { useSolidDatasetWithAcl } from "@/app/lib/hooks"
-import { NoteDigitalDocument } from "@/app/lib/utilities"
+import { SCHEMA } from "@/app/lib/utilities"
 import { buildThing, createSolidDataset, createThing, getSolidDatasetWithAcl, getThing, saveSolidDatasetAt, setThing } from "@inrupt/solid-client"
-import { getAccessFor } from "@inrupt/solid-client/dist/access/universal"
 import { useSession } from "@inrupt/solid-ui-react"
 import { RDF, SCHEMA_INRUPT } from "@inrupt/vocab-common-rdf"
 import { useState } from "react"
@@ -33,7 +32,7 @@ export default function AddNoteButton(props: {
         
         // create new note Thing 
         const newNoteThing = buildThing(createThing({name: "section1"}))
-            .addIri(RDF.type, NoteDigitalDocument)
+            .addIri(RDF.type, SCHEMA.NoteDigitalDocument)
             .addStringNoLocale(SCHEMA_INRUPT.text, "")
             .build()
         
