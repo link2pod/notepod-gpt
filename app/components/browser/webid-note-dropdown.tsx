@@ -38,7 +38,7 @@ export default function WebidNoteDropdown(props: {
     //  If rootStorages is empty array, then get rootStorage manually
     const {data: rootPod} = useSWR(
         // caching key
-        (rootStorages && rootStorages.length === 0) ? 'rootStorage' : null, 
+        (!rootStorages || rootStorages.length === 0) ? 'rootStorage' : null, 
         (_) => getRootContainer(props.webId), 
         {revalidateIfStale: false, revalidateOnFocus: false}
     ) 
