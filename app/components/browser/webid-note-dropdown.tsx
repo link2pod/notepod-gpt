@@ -1,17 +1,11 @@
 "use client"
 
-import { SolidDataset, Thing, addIri, buildThing, createSolidDataset, createThing, getIri, getPodUrlAll, getPodUrlAllFrom, getProfileAll, getSolidDataset, getSourceUrl, getThing, getThingAll, getUrl, getUrlAll, saveSolidDatasetAt, setIri, setThing } from "@inrupt/solid-client";
+import {  getPodUrlAllFrom, getProfileAll,} from "@inrupt/solid-client";
 import { useSession } from "@inrupt/solid-ui-react";
 import { useState } from "react";
-import { Popover} from "@headlessui/react"
-import {BsChevronRight} from "react-icons/bs"
-import {FaEllipsisH} from "react-icons/fa"
-import Spinner from "../spinner";
 import { SOLID } from "@inrupt/vocab-solid"
-import NoteContainerDropdown from "./note-container-dropdown"
-import { GetProfileAll, NoteDigitalDocument, getRootContainer, getTypeIndexUrl } from "../../lib/utilities";
+import { getRootContainer, getTypeIndexUrl } from "../../lib/utilities";
 import useSWR from 'swr'
-import { getDefaultSession } from "@inrupt/solid-client-authn-browser";
 import TypeIndexDropdown from "./typeindex-dropdown";
 import OptionsMenu from "./options-menu";
 import {DropdownBody, DropdownButton} from "./dropdown";
@@ -44,10 +38,12 @@ export default function WebidNoteDropdown(props: {
     //  If rootStorages is empty array, then get rootStorage manually
     const {data: rootPod} = useSWR(
         // caching key
-        (rootStorages && rootStorages.length === 0) ? 'rootStorage' : null, 
+        (!rootStorages || rootStorages.length === 0) ? 'rootStorage' : null, 
         (_) => getRootContainer(props.webId), 
         {revalidateIfStale: false, revalidateOnFocus: false}
     ) 
+
+    const rootStorage = rootStorages && rootStorages[0] ? rootStorages[0] : rootPod
 
     const handleOpenDropdown = async () => {
         setShowChildren(!showChildren)
@@ -74,14 +70,14 @@ export default function WebidNoteDropdown(props: {
             isLoading={isLoading}
             error={error}
         >
-            {privateTypeIndexUrl  && <TypeIndexDropdown 
+            {privateTypeIndexUrl  && rootStorage && <TypeIndexDropdown 
                 typeIndexUrl={privateTypeIndexUrl}
-                storageUrl={rootPod}
+                storageUrl={`${rootStorage}private-notes/`}
                 title="Private Notes"
             />}
-            {publicTypeIndexUrl  && <TypeIndexDropdown 
+            {publicTypeIndexUrl  && rootStorage && <TypeIndexDropdown 
                 typeIndexUrl={publicTypeIndexUrl}
-                storageUrl={rootPod}
+                storageUrl={`${rootStorage}public-notes/`}
                 title="Public Notes"
             />}
             {/**TODO: Display dropdown for root storage and other PIM:storages */}

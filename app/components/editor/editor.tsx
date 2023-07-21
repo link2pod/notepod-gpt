@@ -21,6 +21,7 @@ export default function Editor(){
         = useSolidDatasetWithAcl(selectedNoteUrl ? selectedNoteUrl : null,
             {swrConfig: {
                 onSuccess(data, key, config) {
+                    // Assume fetched note is more recent, so prefer useSWR's data
                     setDisplayedNoteDataset(data)
                 },
                 keepPreviousData: false,
@@ -29,9 +30,6 @@ export default function Editor(){
     
     const [displayedNoteDataset, setDisplayedNoteDataset] 
         = useState(noteDataset)
-
-    // Assume fetched note is more recent, so prefer useSWR's data
-    useEffect(() => setDisplayedNoteDataset(noteDataset), [noteDataset])
     
     const [showShareModal, setShowShareModal]  // Sharing note permissions modal
         = useState(false)
@@ -94,12 +92,12 @@ export default function Editor(){
 
     return (<div className="relative w-full h-full flex flex-col overflow-y-auto">
         {/**Toolbar at top*/}
-        <div className="w-full justify-between flex sticky top-0 p-2 border-b-2 space-x-1">
+        <div className="w-full justify-between flex sticky top-0 p-2 border-b-2 space-x-1 overflow-clip">
             {/**Saving status (or whatever it's set to)*/}
                 <p className="text-gray-400 md:w-20">
                     {savingStatus}
                 </p>
-            <div className="flex space-between space-x-1">
+            <div className="flex space-between space-x-1 overflow-clip">
                 {/**Title of note */}
                 <p className="text-primary truncate flex-initial">{selectedNoteUrl}</p>
                 {/**Circle Spinner if Revalidating data */}
