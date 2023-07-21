@@ -43,6 +43,8 @@ export default function WebidNoteDropdown(props: {
         {revalidateIfStale: false, revalidateOnFocus: false}
     ) 
 
+    const rootStorage = rootStorages && rootStorages[0] ? rootStorages[0] : rootPod
+
     const handleOpenDropdown = async () => {
         setShowChildren(!showChildren)
     }
@@ -68,14 +70,14 @@ export default function WebidNoteDropdown(props: {
             isLoading={isLoading}
             error={error}
         >
-            {privateTypeIndexUrl  && rootPod && <TypeIndexDropdown 
+            {privateTypeIndexUrl  && rootStorage && <TypeIndexDropdown 
                 typeIndexUrl={privateTypeIndexUrl}
-                storageUrl={`${rootPod}private-notes/`}
+                storageUrl={`${rootStorage}private-notes/`}
                 title="Private Notes"
             />}
-            {publicTypeIndexUrl  && rootPod && <TypeIndexDropdown 
+            {publicTypeIndexUrl  && rootStorage && <TypeIndexDropdown 
                 typeIndexUrl={publicTypeIndexUrl}
-                storageUrl={`${rootPod}public-notes/`}
+                storageUrl={`${rootStorage}public-notes/`}
                 title="Public Notes"
             />}
             {/**TODO: Display dropdown for root storage and other PIM:storages */}
