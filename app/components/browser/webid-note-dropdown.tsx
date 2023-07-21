@@ -70,12 +70,12 @@ export default function WebidNoteDropdown(props: {
         >
             {privateTypeIndexUrl  && rootPod && <TypeIndexDropdown 
                 typeIndexUrl={privateTypeIndexUrl}
-                storageUrl={`${rootPod}private-notes`}
+                storageUrl={`${rootPod}private-notes/`}
                 title="Private Notes"
             />}
             {publicTypeIndexUrl  && rootPod && <TypeIndexDropdown 
                 typeIndexUrl={publicTypeIndexUrl}
-                storageUrl={`${rootPod}public-notes`}
+                storageUrl={`${rootPod}public-notes/`}
                 title="Public Notes"
             />}
             {/**TODO: Display dropdown for root storage and other PIM:storages */}

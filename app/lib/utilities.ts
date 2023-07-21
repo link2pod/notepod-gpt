@@ -16,6 +16,15 @@ export function getContainerUrlPostfix(url: string) {
     return url.substring(startindex)
 }
 
+/**
+ * 
+ * @param url url of resource or container
+ * @returns container of a resource. If url represents container, returns parent container
+ */
+export function getUrlPrefix(url: string){
+    return url.substring(0, url.substring(0, url.length - 1).lastIndexOf("/") + 1)
+}
+
 // ontology shortcut
 export const SCHEMA = {
     NoteDigitalDocument: "https://schema.org/NoteDigitalDocument",
@@ -56,7 +65,7 @@ export async function getRootContainer(url: string) {
             // swallow errors since it's likely unauthenticated or other error could arise
         }
         // Get parent container url
-        currUrl = currUrl.substring(0, currUrl.substring(0, currUrl.length - 1).lastIndexOf("/") + 1)
+        currUrl = getUrlPrefix(currUrl)
     }
     if (!rootContainerUrl) {
         throw new Error("Couldn't find root container")
@@ -155,7 +164,7 @@ export async function addNoteToContainer(containerIRI: string, fetch?: Fetch, pa
         const newNoteDatasetUrl = `${newContainerIRI}note-dataset`
 
         // create new note Thing 
-        var newNoteThing = buildThing(createThing({ name: "#" }))
+        var newNoteThing = buildThing(createThing())
             .addIri(RDF.type, SCHEMA.NoteDigitalDocument)
             .addStringNoLocale(SCHEMA_INRUPT.name, dateString)
             .addStringNoLocale(SCHEMA_INRUPT.text, "")

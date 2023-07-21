@@ -3,12 +3,7 @@
 import { Access, SolidDataset, Thing, ThingPersisted, buildThing, createContainerInContainer, createSolidDataset, createThing, getIri, getIriAll, getSolidDataset, getSourceIri, getSourceUrl, getThing, getThingAll, getUrl, saveSolidDatasetAt, setThing } from "@inrupt/solid-client"
 import { SOLID } from "@inrupt/vocab-solid"
 import { useState } from "react"
-import { BsChevronRight } from "react-icons/bs"
 import { SCHEMA, addNoteToContainer, getContainerUrlPostfix } from "../../lib/utilities"
-import Spinner from "../spinner"
-import { Popover } from "@headlessui/react"
-import AddNoteButton from "./add-note-button"
-import { FaEllipsisH } from "react-icons/fa"
 import { LDP, RDF, SCHEMA_INRUPT } from "@inrupt/vocab-common-rdf"
 import { useSession } from "@inrupt/solid-ui-react"
 import useSWR from 'swr'

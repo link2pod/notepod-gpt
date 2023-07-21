@@ -7,7 +7,7 @@ import { SCHEMA_INRUPT } from "@inrupt/vocab-common-rdf"
 import { ReactNode, useContext, useEffect, useState } from "react"
 import BaseModal from "./base-modal";
 import useSWR from 'swr'
-import { useSolidDatasetWithAcl } from "../lib/hooks"
+import { useSolidDataset, useSolidDatasetWithAcl } from "../lib/hooks"
 import { SolidDatasetWithAcl } from "../lib/utilities"
 
 // Displays modal that when active on Dom, will: 
@@ -24,7 +24,7 @@ export default function MockQuizModal(props: {
 
   // get note dataset (should be from cache)
   const { data: noteDataset, isLoading: loadingNoteData }
-    = useSWR<SolidDatasetWithAcl>(selectedNoteUrl ? selectedNoteUrl : null)
+    = useSolidDataset(selectedNoteUrl ? selectedNoteUrl : null)
 
   // Function that calls /api/mockquiz endpoint with required data
   const getMockQuiz = async () => {
