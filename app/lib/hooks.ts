@@ -86,7 +86,7 @@ export function useGetNotesFromTypeIndex(typeIndexDataset?: SolidDataset, level 
 
     const addToResult = (iri: string) => {
         result.add(iri)
-        setSize(size+1) // force things depending on result to re-render
+        setSize(result.size) // force re-render
     }
 
     // go through all typeRegistrations that have a solid:forClass equal to Schema:NoteDigitalDocument
